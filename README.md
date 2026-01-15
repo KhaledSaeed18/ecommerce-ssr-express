@@ -42,7 +42,7 @@ A secure SSR e-commerce backend using Node.js, Express, EJS, and MongoDB with ad
 
 ## Project Structure
 
-```
+```bash
 src/
   server.js              # Entry point
   app.js                 # Express app setup
@@ -94,7 +94,7 @@ src/
 
 3. Configure environment variables in `.env`:
 
-   ```
+   ```bash
    DATABASE_URL=your_mongodb_connection_string
    NODE_ENV=development
    PORT=3000
@@ -116,17 +116,6 @@ npm start
 ```
 
 The server will start on `http://localhost:3000`
-
-## Creating an Admin User
-
-To create an admin user, you'll need to manually update the database or modify the registration flow temporarily. Here's a MongoDB query:
-
-```javascript
-db.users.updateOne(
-  { email: "admin@example.com" },
-  { $set: { role: "admin" } }
-)
-```
 
 ## Session Configuration
 
