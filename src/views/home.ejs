@@ -1,0 +1,27 @@
+<div class="card">
+    <h1>Welcome to E-Commerce SSR</h1>
+    <p>This is a secure SSR e-commerce backend with session-based authentication.</p>
+
+    <% if (isAuthenticated) { %>
+        <h2>You are logged in as: <%= user.email %>
+        </h2>
+        <p>Role: <strong>
+                <%= userRole %>
+            </strong></p>
+
+        <div style="margin-top: 2rem;">
+            <form action="/auth/logout" method="POST" style="display: inline; margin-right: 1rem;">
+                <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+                <button type="submit">Logout (This Device)</button>
+            </form>
+
+            <form action="/auth/logout-all" method="POST" style="display: inline;">
+                <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+                <button type="submit" style="background-color: #dc3545;">Logout (All Devices)</button>
+            </form>
+        </div>
+        <% } else { %>
+            <h2>Get Started</h2>
+            <p>Please <a href="/auth/login">login</a> or <a href="/auth/register">register</a> to continue.</p>
+            <% } %>
+</div>

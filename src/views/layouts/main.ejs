@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>
+        <%= title %> | E-Commerce SSR
+    </title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            line-height: 1.6;
+            background-color: #f5f5f5;
+        }
+
+        .navbar {
+            background-color: #333;
+            color: white;
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .navbar a {
+            color: white;
+            text-decoration: none;
+            margin-left: 1rem;
+        }
+
+        .navbar a:hover {
+            text-decoration: underline;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 2rem auto;
+            padding: 0 2rem;
+        }
+
+        .card {
+            background: white;
+            padding: 2rem;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        button,
+        .btn {
+            padding: 0.5rem 1rem;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        button:hover,
+        .btn:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+
+<body>
+    <nav class="navbar">
+        <div>
+            <a href="/" style="font-weight: bold; font-size: 1.2rem;">E-Commerce SSR</a>
+        </div>
+        <div>
+            <% if (isAuthenticated) { %>
+                <span>Welcome, <%= user.email %></span>
+                <% if (userRole==='admin' ) { %>
+                    <a href="/admin/dashboard">Dashboard</a>
+                    <% } %>
+                        <form action="/auth/logout" method="POST" style="display: inline;">
+                            <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+                            <button type="submit"
+                                style="background: transparent; border: 1px solid white; margin-left: 1rem;">Logout</button>
+                        </form>
+                        <% } else { %>
+                            <a href="/auth/login">Login</a>
+                            <a href="/auth/register">Register</a>
+                            <% } %>
+        </div>
+    </nav>
+
+    <div class="container">
+        <%- body %>
+    </div>
+</body>
+
+</html>

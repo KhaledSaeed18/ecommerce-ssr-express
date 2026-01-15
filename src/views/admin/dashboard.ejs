@@ -1,0 +1,54 @@
+<div class="card">
+    <h1>Admin Dashboard</h1>
+    <p>Welcome to the admin panel, <%= user.email %>!</p>
+</div>
+
+<div class="card">
+    <h2>Active Sessions</h2>
+    <p>Manage your active login sessions across all devices.</p>
+
+    <% if (sessions && sessions.length> 0) { %>
+        <table>
+            <thead>
+                <tr>
+                    <th>Device</th>
+                    <th>IP Address</th>
+                    <th>Location</th>
+                    <th>Last Seen</th>
+                    <th>Created</th>
+                </tr>
+            </thead>
+            <tbody>
+                <% sessions.forEach(session=> { %>
+                    <tr>
+                        <td>
+                            <%= session.device.browser || 'Unknown' %> on <%= session.device.os || 'Unknown' %>
+                        </td>
+                        <td>
+                            <%= session.ip %>
+                        </td>
+                        <td>
+                            <%= session.location.city || 'Unknown' %>, <%= session.location.country || 'Unknown' %>
+                        </td>
+                        <td>
+                            <%= new Date(session.lastSeenAt).toLocaleString() %>
+                        </td>
+                        <td>
+                            <%= new Date(session.createdAt).toLocaleString() %>
+                        </td>
+                    </tr>
+                    <% }); %>
+            </tbody>
+        </table>
+        <% } else { %>
+            <p>No active sessions found.</p>
+            <% } %>
+</div>
+
+<div class="card">
+    <h2>Actions</h2>
+    <form action="/auth/logout-all" method="POST" style="display: inline;">
+        <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+        <button type="submit" style="background-color: #dc3545;">Logout All Devices</button>
+    </form>
+</div>
