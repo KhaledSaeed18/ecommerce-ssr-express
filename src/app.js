@@ -12,6 +12,9 @@ import locals from './middlewares/locals.js';
 import indexRoutes from './routes/index.routes.js';
 import authRoutes from './routes/auth.routes.js';
 import adminRoutes from './routes/admin.routes.js';
+import categoryRoutes from './routes/category.routes.js';
+import productRoutes from './routes/product.routes.js';
+import publicRoutes from './routes/public.routes.js';
 
 // ES module equivalent of __dirname
 const __filename = fileURLToPath(import.meta.url);
@@ -61,6 +64,9 @@ app.use(locals);
 app.use('/', indexRoutes);
 app.use('/auth', authRoutes);
 app.use('/admin', adminRoutes);
+app.use('/admin/categories', categoryRoutes);
+app.use('/admin/products', productRoutes);
+app.use('/', publicRoutes);
 
 // 404 handler
 app.use((req, res) => {

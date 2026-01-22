@@ -1,0 +1,57 @@
+<div class="card">
+    <div class="card-header">
+        <h1 class="card-title">
+            <%= category ? 'Edit Category' : 'Create Category' %>
+        </h1>
+        <p class="card-description">
+            <%= category ? 'Update category information' : 'Add a new product category' %>
+        </p>
+    </div>
+
+    <div class="card-content">
+        <% if (typeof error !=='undefined' && error) { %>
+            <div class="alert alert-danger">
+                <%= error %>
+            </div>
+            <% } %>
+
+                <form action="<%= category ? `/admin/categories/${category._id}` : '/admin/categories' %>"
+                    method="POST">
+                    <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+
+                    <div class="form-group">
+                        <label for="name" class="form-label">Category Name</label>
+                        <input type="text" id="name" name="name" class="form-input" required minlength="2"
+                            maxlength="50" value="<%= category ? category.name : '' %>">
+                        <small class="form-help">Enter a unique name for this category</small>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="description" class="form-label">Description</label>
+                        <textarea id="description" name="description" class="form-input" rows="4"
+                            maxlength="500"><%= category ? category.description : '' %></textarea>
+                        <small class="form-help">Optional description for this category (max 500 characters)</small>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="checkbox-label">
+                            <input type="checkbox" name="isActive" <%=category && category.isActive ? 'checked' :
+                                (!category ? 'checked' : '' ) %>>
+                            <span>Active</span>
+                        </label>
+                        <small class="form-help">Active categories are visible to customers</small>
+                    </div>
+
+                    <div class="flex gap-md">
+                        <button type="submit" class="btn btn-primary">
+                            <i data-lucide="save"></i>
+                            <%= category ? 'Update Category' : 'Create Category' %>
+                        </button>
+                        <a href="/admin/categories" class="btn btn-secondary">
+                            <i data-lucide="x"></i>
+                            Cancel
+                        </a>
+                    </div>
+                </form>
+    </div>
+</div>

@@ -16,14 +16,17 @@
         <div class="navbar-container">
             <a href="/" class="navbar-brand">SSR Store</a>
             <div class="navbar-nav">
+                <a href="/products" class="navbar-link">Products</a>
                 <% if (isAuthenticated) { %>
                     <span class="navbar-user">Welcome, <%= user.email %></span>
                     <% if (userRole==='admin' ) { %>
                         <a href="/admin/dashboard" class="navbar-link">Dashboard</a>
                         <% } %>
                             <form action="/auth/logout" method="POST" style="display: inline;">
-                                <input type="hidden" name="_csrf" value="<%= csrfToken %>">
-                                <button type="submit" class="navbar-btn">Logout</button>
+                                <% if (typeof csrfToken !=='undefined' ) { %>
+                                    <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+                                    <% } %>
+                                        <button type="submit" class="navbar-btn">Logout</button>
                             </form>
                             <% } else { %>
                                 <a href="/auth/login" class="navbar-link">Login</a>

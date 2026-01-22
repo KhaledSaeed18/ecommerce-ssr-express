@@ -19,6 +19,10 @@
                 <span class="badge badge-danger">ADMIN</span>
             </div>
             <div class="navbar-nav">
+                <a href="/admin/dashboard" class="navbar-link">Dashboard</a>
+                <a href="/admin/products" class="navbar-link">Products</a>
+                <a href="/admin/categories" class="navbar-link">Categories</a>
+                <a href="/products" class="navbar-link">View Store</a>
                 <span class="navbar-user">Welcome, <%= user.email %></span>
                 <form action="/auth/logout" method="POST" style="display: inline;">
                     <input type="hidden" name="_csrf" value="<%= csrfToken %>">

@@ -1,0 +1,105 @@
+<div class="container" style="max-width: 1200px; margin: 2rem auto; padding: 0 1rem;">
+    <div class="card">
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem;">
+            <!-- Product Images -->
+            <div>
+                <% if (product.images && product.images.length> 0) { %>
+                    <div id="mainImage"
+                        style="width: 100%; height: 500px; background-size: cover; background-position: center; background-repeat: no-repeat; border-radius: 8px; margin-bottom: 1rem; border: 1px solid #ddd; background-image: url('<%= product.images[0].url %>');">
+                    </div>
+                    <div
+                        style="display: grid; grid-template-columns: repeat(auto-fill, minmax(100px, 1fr)); gap: 0.5rem;">
+                        <% product.images.forEach((image, index)=> { %>
+                            <img src="<%= image.url %>" alt="<%= image.alt %>"
+                                style="width: 100%; height: 100px; border-radius: 4px; cursor: pointer; border: 2px solid"
+                                onclick="document.getElementById('mainImage').style.backgroundImage='url(\'<%= image.url %>\')'; document.querySelectorAll('.thumbnail').forEach(t => t.style.borderColor='transparent'); this.style.borderColor='var(--primary)';"
+                                class="thumbnail">
+                            <% }); %>
+                    </div>
+                    <% } else { %>
+                        <div
+                            style="width: 100%; height: 500px; background: #e0e0e0; display: flex; align-items: center; justify-content: center; border-radius: 8px;">
+                            <i data-lucide="image" style="width: 96px; height: 96px; opacity: 0.3;"></i>
+                        </div>
+                        <% } %>
+            </div>
+
+            <!-- Product Details -->
+            <div style="padding: 1rem 0;">
+                <% if (product.category) { %>
+                    <a href="/categories/<%= product.category.slug %>" class="badge badge-secondary"
+                        style="text-decoration: none; margin-bottom: 1rem; display: inline-block;">
+                        <%= product.category.name %>
+                    </a>
+                    <% } %>
+
+                        <h1 style="margin: 0 0 1rem; font-size: 2rem; font-weight: bold;">
+                            <%= product.name %>
+                        </h1>
+
+                        <div class="flex items-center gap-md" style="margin-bottom: 1rem;">
+                            <span style="font-size: 2rem; font-weight: bold; color: var(--primary);">
+                                $<%= product.price.toFixed(2) %>
+                            </span>
+                            <% if (product.comparePrice && product.comparePrice> product.price) { %>
+                                <span class="text-muted" style="text-decoration: line-through; font-size: 1.25rem;">
+                                    $<%= product.comparePrice.toFixed(2) %>
+                                </span>
+                                <span class="badge badge-danger">
+                                    Save <%= Math.round(((product.comparePrice - product.price) / product.comparePrice)
+                                        * 100) %>%
+                                </span>
+                                <% } %>
+                        </div>
+
+                        <div style="padding: 1rem; background: #f5f5f5; border-radius: 8px; margin-bottom: 1.5rem;">
+                            <div class="flex items-center gap-sm" style="margin-bottom: 0.5rem;">
+                                <i data-lucide="package" style="width: 20px; height: 20px;"></i>
+                                <strong>Stock:</strong>
+                                <% if (product.stock> 0) { %>
+                                    <span class="badge badge-success">Available</span>
+                                    <% } else { %>
+                                        <span class="badge badge-danger">Out of Stock</span>
+                                        <% } %>
+                            </div>
+                            <% if (product.sku) { %>
+                                <div class="flex items-center gap-sm">
+                                    <i data-lucide="hash" style="width: 20px; height: 20px;"></i>
+                                    <strong>SKU:</strong>
+                                    <span>
+                                        <%= product.sku %>
+                                    </span>
+                                </div>
+                                <% } %>
+                        </div>
+
+                        <div style="margin-bottom: 2rem;">
+                            <h3 style="margin: 0 0 0.5rem; font-size: 1.25rem;">Description</h3>
+                            <p style="line-height: 1.6; color: #666;">
+                                <%= product.description %>
+                            </p>
+                        </div>
+
+                        <% if (product.stock> 0) { %>
+                            <button class="btn btn-primary btn-lg" style="width: 100%;" disabled>
+                                <i data-lucide="shopping-cart"></i>
+                                Add to Cart (Coming Soon)
+                            </button>
+                            <% } else { %>
+                                <button class="btn btn-secondary btn-lg" style="width: 100%;" disabled>
+                                    <i data-lucide="x-circle"></i>
+                                    Out of Stock
+                                </button>
+                                <% } %>
+            </div>
+        </div>
+    </div>
+
+    <!-- Back Button -->
+    <div style="margin-top: 2rem;">
+        <a href="/products" class="btn btn-secondary">
+            <i data-lucide="arrow-left"></i>
+            Back to Products
+        </a>
+    </div>
+</div>
