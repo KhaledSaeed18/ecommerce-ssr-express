@@ -26,7 +26,14 @@ const userSessionSchema = new mongoose.Schema(
         },
         location: {
             country: String,
+            countryCode: String,
+            region: String,
+            regionName: String,
             city: String,
+            zip: String,
+            lat: Number,
+            lon: Number,
+            timezone: String,
         },
         lastSeenAt: {
             type: Date,

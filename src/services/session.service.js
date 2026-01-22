@@ -2,6 +2,64 @@ import UserSession from '../models/UserSession.model.js';
 
 class SessionService {
     /**
+     * Get location from IP address
+     */
+    async getLocationFromIP(ip) {
+        try {
+            // Check if IP is localhost
+            const localhostIPs = ['::1', '127.0.0.1', '::ffff:127.0.0.1', 'localhost'];
+            if (localhostIPs.includes(ip)) {
+                return {
+                    country: 'Local',
+                    countryCode: 'LC',
+                    region: '',
+                    regionName: 'Local',
+                    city: 'Localhost',
+                    zip: '',
+                    lat: 0,
+                    lon: 0,
+                    timezone: 'UTC',
+                };
+            }
+            
+            const response = await fetch(`http://ip-api.com/json/${ip}?fields=status,country,countryCode,region,regionName,city,zip,lat,lon,timezone`);
+            const data = await response.json();
+
+            if (data.status === 'success') {
+                return {
+                    country: data.country || 'Unknown',
+                    countryCode: data.countryCode || '',
+                    region: data.region || '',
+                    regionName: data.regionName || '',
+                    city: data.city || 'Unknown',
+                    zip: data.zip || '',
+                    lat: data.lat || 0,
+                    lon: data.lon || 0,
+                    timezone: data.timezone || 'UTC',
+                };
+            }
+
+            return {
+                country: 'Unknown',
+                countryCode: '',
+                region: '',
+                regionName: '',
+                city: 'Unknown',
+                zip: '',
+                lat: 0,
+                lon: 0,
+                timezone: 'UTC',
+            };
+        } catch (error) {
+            console.error('Geolocation error:', error);
+            return {
+                country: 'Unknown',
+                city: 'Unknown',
+            };
+        }
+    }
+
+    /**
      * Parse user agent to extract device info
      */
     parseUserAgent(userAgent) {
@@ -31,6 +89,7 @@ class SessionService {
      */
     async createSession(userId, sessionId, ip, userAgent) {
         const device = this.parseUserAgent(userAgent);
+        const location = await this.getLocationFromIP(ip);
 
         const session = await UserSession.create({
             userId,
@@ -38,10 +97,7 @@ class SessionService {
             ip,
             userAgent,
             device,
-            location: {
-                country: 'Unknown',
-                city: 'Unknown',
-            },
+            location,
             lastSeenAt: new Date(),
             isRevoked: false,
         });
