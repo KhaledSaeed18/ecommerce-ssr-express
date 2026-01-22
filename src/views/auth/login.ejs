@@ -1,15 +1,15 @@
-<h1>
+<h1 class="auth-title">
     <%= title %>
 </h1>
 
 <% if (error) { %>
-    <div class="error">
+    <div class="alert alert-error">
         <%= error %>
     </div>
     <% } %>
 
         <% if (success) { %>
-            <div class="success">
+            <div class="alert alert-success">
                 <%= success %>
             </div>
             <% } %>
@@ -18,18 +18,18 @@
                     <input type="hidden" name="_csrf" value="<%= csrfToken %>">
 
                     <div class="form-group">
-                        <label for="email">Email</label>
-                        <input type="email" id="email" name="email" required>
+                        <label for="email" class="form-label">Email</label>
+                        <input type="email" id="email" name="email" class="form-input" required>
                     </div>
 
                     <div class="form-group">
-                        <label for="password">Password</label>
-                        <input type="password" id="password" name="password" required>
+                        <label for="password" class="form-label">Password</label>
+                        <input type="password" id="password" name="password" class="form-input" required>
                     </div>
 
-                    <button type="submit">Login</button>
+                    <button type="submit" class="btn btn-primary btn-block">Login</button>
                 </form>
 
-                <div class="link">
+                <div class="auth-link">
                     Don't have an account? <a href="/auth/register">Register here</a>
                 </div>

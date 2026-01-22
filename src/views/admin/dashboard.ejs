@@ -1,54 +1,64 @@
 <div class="card">
-    <h1>Admin Dashboard</h1>
-    <p>Welcome to the admin panel, <%= user.email %>!</p>
+    <div class="card-header">
+        <h1 class="card-title">Admin Dashboard</h1>
+        <p class="card-description">Welcome to the admin panel, <%= user.email %>!</p>
+    </div>
 </div>
 
 <div class="card">
-    <h2>Active Sessions</h2>
-    <p>Manage your active login sessions across all devices.</p>
+    <div class="card-header">
+        <h2 class="card-title">Active Sessions</h2>
+        <p class="card-description">Manage your active login sessions across all devices.</p>
+    </div>
 
-    <% if (sessions && sessions.length> 0) { %>
-        <table>
-            <thead>
-                <tr>
-                    <th>Device</th>
-                    <th>IP Address</th>
-                    <th>Location</th>
-                    <th>Last Seen</th>
-                    <th>Created</th>
-                </tr>
-            </thead>
-            <tbody>
-                <% sessions.forEach(session=> { %>
+    <div class="card-content">
+        <% if (sessions && sessions.length> 0) { %>
+            <table class="table">
+                <thead>
                     <tr>
-                        <td>
-                            <%= session.device.browser || 'Unknown' %> on <%= session.device.os || 'Unknown' %>
-                        </td>
-                        <td>
-                            <%= session.ip %>
-                        </td>
-                        <td>
-                            <%= session.location.city || 'Unknown' %>, <%= session.location.country || 'Unknown' %>
-                        </td>
-                        <td>
-                            <%= new Date(session.lastSeenAt).toLocaleString() %>
-                        </td>
-                        <td>
-                            <%= new Date(session.createdAt).toLocaleString() %>
-                        </td>
+                        <th>Device</th>
+                        <th>IP Address</th>
+                        <th>Location</th>
+                        <th>Last Seen</th>
+                        <th>Created</th>
                     </tr>
-                    <% }); %>
-            </tbody>
-        </table>
-        <% } else { %>
-            <p>No active sessions found.</p>
-            <% } %>
+                </thead>
+                <tbody>
+                    <% sessions.forEach(session=> { %>
+                        <tr>
+                            <td>
+                                <%= session.device.browser || 'Unknown' %> on <%= session.device.os || 'Unknown' %>
+                            </td>
+                            <td>
+                                <%= session.ip %>
+                            </td>
+                            <td>
+                                <%= session.location.city || 'Unknown' %>, <%= session.location.country || 'Unknown' %>
+                            </td>
+                            <td>
+                                <%= new Date(session.lastSeenAt).toLocaleString() %>
+                            </td>
+                            <td>
+                                <%= new Date(session.createdAt).toLocaleString() %>
+                            </td>
+                        </tr>
+                        <% }); %>
+                </tbody>
+            </table>
+            <% } else { %>
+                <p class="text-muted">No active sessions found.</p>
+                <% } %>
+    </div>
 </div>
 
 <div class="card">
-    <h2>Actions</h2>
-    <form action="/auth/logout-all" method="POST" style="display: inline;">
-        <input type="hidden" name="_csrf" value="<%= csrfToken %>">
-        <button type="submit" style="background-color: #dc3545;">Logout All Devices</button>
-    </form>
+    <div class="card-header">
+        <h2 class="card-title">Actions</h2>
+    </div>
+    <div class="card-content">
+        <form action="/auth/logout-all" method="POST">
+            <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+            <button type="submit" class="btn btn-danger">Logout All Devices</button>
+        </form>
+    </div>
 </div>
