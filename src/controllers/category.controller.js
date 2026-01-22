@@ -12,6 +12,7 @@ class CategoryController {
             res.render('admin/categories/list', {
                 layout: 'layouts/admin',
                 title: 'Manage Categories',
+                currentPage: 'categories',
                 categories,
                 csrfToken: req.csrfToken()
             });
@@ -29,6 +30,7 @@ class CategoryController {
         res.render('admin/categories/form', {
             layout: 'layouts/admin',
             title: 'Create Category',
+            currentPage: 'categories',
             category: null,
             csrfToken: req.csrfToken()
         });
@@ -54,6 +56,7 @@ class CategoryController {
             res.render('admin/categories/form', {
                 layout: 'layouts/admin',
                 title: 'Create Category',
+                currentPage: 'categories',
                 category: null,
                 error: error.message,
                 csrfToken: req.csrfToken()
@@ -76,6 +79,7 @@ class CategoryController {
             res.render('admin/categories/form', {
                 layout: 'layouts/admin',
                 title: 'Edit Category',
+                currentPage: 'categories',
                 category,
                 csrfToken: req.csrfToken()
             });
@@ -110,6 +114,7 @@ class CategoryController {
             res.render('admin/categories/form', {
                 layout: 'layouts/admin',
                 title: 'Edit Category',
+                currentPage: 'categories',
                 category,
                 error: error.message,
                 csrfToken: req.csrfToken()

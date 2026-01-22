@@ -1,57 +1,155 @@
-<div class="card">
-    <div class="card-header">
-        <h1 class="card-title">Welcome to SSR Store</h1>
-        <p class="card-description">This is a store built with server-side rendering.</p>
-    </div>
-
-    <div class="card-content">
-        <% if (isAuthenticated) { %>
-            <div class="space-y-md">
-                <p>You are logged in as: <strong>
-                        <%= user.email %>
-                    </strong></p>
-                <p>Role: <span class="badge badge-primary">
-                        <%= userRole %>
-                    </span></p>
-                <div style="margin-top: 1.5rem;">
-                    <a href="/products" class="btn btn-primary" style="margin-right: 0.5rem;">
-                        <i data-lucide="shopping-bag"></i>
-                        Browse Products
+<!-- Hero Section -->
+<section class="hero">
+    <div class="hero-content">
+        <h1 class="hero-title">Welcome to SSR Store</h1>
+        <p class="hero-description">Discover amazing products with authentic quality and timeless style</p>
+        <div class="hero-actions">
+            <a href="/products" class="btn btn-lg" style="background: var(--color-cream); color: var(--color-brown);">
+                <i data-lucide="shopping-bag"></i>
+                Shop Now
+            </a>
+            <% if (!isAuthenticated) { %>
+                <a href="/auth/register" class="btn btn-lg"
+                    style="background: transparent; border: 2px solid var(--color-cream); color: var(--color-cream);">
+                    <i data-lucide="user-plus"></i>
+                    Join Us
+                </a>
+                <% } else { %>
+                    <a href="<%= userRole === 'admin' ? '/admin/dashboard' : '/dashboard' %>" class="btn btn-lg"
+                        style="background: transparent; border: 2px solid var(--color-cream); color: var(--color-cream);">
+                        <i data-lucide="layout-dashboard"></i>
+                        Dashboard
                     </a>
-                    <% if (userRole==='admin' ) { %>
-                        <a href="/admin/dashboard" class="btn btn-secondary">
-                            <i data-lucide="settings"></i>
-                            Admin Dashboard
-                        </a>
-                        <% } %>
-                </div>
-            </div>
-            <% } else { %>
-                <div class="space-y-md">
-                    <h2>Get Started</h2>
-                    <p>Please <a href="/auth/login">login</a> or <a href="/auth/register">register</a> to continue.</p>
-                    <div style="margin-top: 1.5rem;">
-                        <a href="/products" class="btn btn-primary">
-                            <i data-lucide="shopping-bag"></i>
-                            Browse Products
-                        </a>
-                    </div>
-                </div>
-                <% } %>
-    </div>
-
-    <% if (isAuthenticated) { %>
-        <div class="card-footer">
-            <div class="flex gap-md flex-wrap">
-                <form action="/auth/logout" method="POST">
-                    <input type="hidden" name="_csrf" value="<%= csrfToken %>">
-                    <button type="submit" class="btn btn-primary">Logout (This Device)</button>
-                </form>
-                <form action="/auth/logout-all" method="POST">
-                    <input type="hidden" name="_csrf" value="<%= csrfToken %>">
-                    <button type="submit" class="btn btn-danger">Logout (All Devices)</button>
-                </form>
-            </div>
+                    <% } %>
         </div>
-        <% } %>
+    </div>
+</section>
+
+<div class="container">
+    <!-- Categories Section -->
+    <section class="categories-section">
+        <h2 class="section-title">Shop by Category</h2>
+        <div class="categories-grid">
+            <% if (categories && categories.length> 0) { %>
+                <% categories.forEach(category=> { %>
+                    <a href="/categories/<%= category.slug %>" class="category-card">
+                        <i data-lucide="folder" class="category-icon"></i>
+                        <div class="category-name">
+                            <%= category.name %>
+                        </div>
+                        <div class="category-count">
+                            <%= category.productCount || 0 %> products
+                        </div>
+                    </a>
+                    <% }); %>
+                        <% } else { %>
+                            <div style="grid-column: 1 / -1; text-align: center; padding: var(--spacing-xl);">
+                                <p class="text-muted">No categories available yet</p>
+                            </div>
+                            <% } %>
+        </div>
+    </section>
+
+    <!-- Featured Products Section -->
+    <section class="featured-section">
+        <h2 class="section-title">Featured Products</h2>
+        <div class="products-grid">
+            <% if (featuredProducts && featuredProducts.length> 0) { %>
+                <% featuredProducts.forEach(product=> { %>
+                    <a href="/products/<%= product.slug %>" class="card"
+                        style="text-decoration: none; color: inherit; padding: 0; overflow: hidden;">
+                        <% if (product.images && product.images.length> 0) { %>
+                            <div
+                                style="width: 100%; height: 200px; background-image: url('<%= product.images[0].url %>'); background-size: cover; background-position: center;">
+                            </div>
+                            <% } else { %>
+                                <div
+                                    style="width: 100%; height: 200px; background: var(--color-sage); display: flex; align-items: center; justify-content: center;">
+                                    <i data-lucide="image" style="width: 64px; height: 64px; opacity: 0.3;"></i>
+                                </div>
+                                <% } %>
+                                    <div style="padding: var(--spacing-lg);">
+                                        <h3
+                                            style="margin: 0 0 var(--spacing-sm); font-size: var(--font-size-lg); font-weight: var(--font-weight-semibold);">
+                                            <%= product.name %>
+                                        </h3>
+                                        <p class="text-muted"
+                                            style="font-size: var(--font-size-sm); margin-bottom: var(--spacing-md); overflow: hidden; text-overflow: ellipsis; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical;">
+                                            <%= product.description %>
+                                        </p>
+                                        <div
+                                            style="display: flex; justify-content: space-between; align-items: center;">
+                                            <span
+                                                style="font-size: var(--font-size-xl); font-weight: var(--font-weight-bold); color: var(--color-primary);">
+                                                $<%= product.price.toFixed(2) %>
+                                            </span>
+                                            <% if (product.stock> 0) { %>
+                                                <span class="badge badge-success">In Stock</span>
+                                                <% } else { %>
+                                                    <span class="badge badge-danger">Out of Stock</span>
+                                                    <% } %>
+                                        </div>
+                                    </div>
+                    </a>
+                    <% }); %>
+                        <% } else { %>
+                            <div style="grid-column: 1 / -1; text-align: center; padding: var(--spacing-xl);">
+                                <p class="text-muted">No featured products available yet</p>
+                            </div>
+                            <% } %>
+        </div>
+        <div style="text-align: center; margin-top: var(--spacing-xl);">
+            <a href="/products" class="btn btn-primary btn-lg">
+                View All Products
+                <i data-lucide="arrow-right"></i>
+            </a>
+        </div>
+    </section>
 </div>
+
+<!-- Footer -->
+<footer class="footer">
+    <div class="footer-content">
+        <div class="footer-section">
+            <h3>SSR Store</h3>
+            <p>Your trusted online store for quality products</p>
+        </div>
+        <div class="footer-section">
+            <h3>Shop</h3>
+            <ul>
+                <li><a href="/products">All Products</a></li>
+                <% if (categories && categories.length> 0) { %>
+                    <% categories.slice(0, 3).forEach(category=> { %>
+                        <li><a href="/categories/<%= category.slug %>">
+                                <%= category.name %>
+                            </a></li>
+                        <% }); %>
+                            <% } %>
+            </ul>
+        </div>
+        <div class="footer-section">
+            <h3>Account</h3>
+            <ul>
+                <% if (isAuthenticated) { %>
+                    <li><a href="<%= userRole === 'admin' ? '/admin/dashboard' : '/dashboard' %>">Dashboard</a></li>
+                    <li><a href="/account/security">Security</a></li>
+                    <% } else { %>
+                        <li><a href="/auth/login">Login</a></li>
+                        <li><a href="/auth/register">Register</a></li>
+                        <% } %>
+            </ul>
+        </div>
+        <div class="footer-section">
+            <h3>About</h3>
+            <ul>
+                <li><a href="/about">About Us</a></li>
+                <li><a href="/contact">Contact</a></li>
+                <li><a href="/terms">Terms of Service</a></li>
+                <li><a href="/privacy">Privacy Policy</a></li>
+            </ul>
+        </div>
+    </div>
+    <div class="footer-bottom">
+        <p>&copy; <%= new Date().getFullYear() %> SSR Store. All rights reserved.</p>
+    </div>
+</footer>

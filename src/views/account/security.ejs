@@ -1,0 +1,145 @@
+<div class="card">
+    <div class="card-header">
+        <h1 class="card-title">Security & Sessions</h1>
+        <p class="card-description">Manage your active sessions and account security</p>
+    </div>
+
+    <% if (typeof success !=='undefined' && success) { %>
+        <div class="alert alert-success">
+            <%= success %>
+        </div>
+        <% } %>
+
+            <% if (typeof error !=='undefined' && error) { %>
+                <div class="alert alert-error">
+                    <%= error %>
+                </div>
+                <% } %>
+
+                    <div class="card-content">
+                        <div style="margin-bottom: var(--spacing-xl);">
+                            <h2 style="font-size: var(--font-size-lg); margin-bottom: var(--spacing-md);">Active
+                                Sessions</h2>
+                            <p class="text-muted" style="margin-bottom: var(--spacing-lg);">
+                                You have <%= sessions.length %> active session(s). You can revoke individual sessions or
+                                    logout from all devices.
+                            </p>
+
+                            <% if (sessions && sessions.length> 0) { %>
+                                <% sessions.forEach(session=> { %>
+                                    <div class="session-card">
+                                        <div class="session-header">
+                                            <div>
+                                                <div class="session-device">
+                                                    <i data-lucide="<%= session.device.os === 'Windows' ? 'monitor' : session.device.os === 'macOS' ? 'laptop' : session.device.os === 'Android' || session.device.os === 'iOS' ? 'smartphone' : 'monitor' %>"
+                                                        style="width: 20px; height: 20px;"></i>
+                                                    <span>
+                                                        <%= session.device.browser %> on <%= session.device.os %>
+                                                    </span>
+                                                </div>
+                                                <% if (session.sessionId===currentSessionId) { %>
+                                                    <span class="badge badge-success"
+                                                        style="margin-top: var(--spacing-xs);">Current Session</span>
+                                                    <% } %>
+                                            </div>
+                                            <% if (session.sessionId !==currentSessionId) { %>
+                                                <form action="/account/sessions/<%= session.sessionId %>/revoke"
+                                                    method="POST">
+                                                    <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+                                                    <button type="submit" class="btn btn-sm btn-danger">Revoke</button>
+                                                </form>
+                                                <% } %>
+                                        </div>
+
+                                        <div class="session-details">
+                                            <div class="session-detail-item">
+                                                <i data-lucide="map-pin"></i>
+                                                <div>
+                                                    <span class="session-detail-label">Location</span>
+                                                    <div class="session-detail-value">
+                                                        <%= session.location.city %>, <%= session.location.country %>
+                                                                <% if (session.location.regionName &&
+                                                                    session.location.regionName
+                                                                    !==session.location.city) { %>
+                                                                    <br><span
+                                                                        style="font-size: 0.9em; color: var(--color-text-muted);">
+                                                                        <%= session.location.regionName %>
+                                                                    </span>
+                                                                    <% } %>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div class="session-detail-item">
+                                                <i data-lucide="wifi"></i>
+                                                <div>
+                                                    <span class="session-detail-label">IP Address</span>
+                                                    <div class="session-detail-value">
+                                                        <%= session.ip %>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div class="session-detail-item">
+                                                <i data-lucide="clock"></i>
+                                                <div>
+                                                    <span class="session-detail-label">Last Seen</span>
+                                                    <div class="session-detail-value">
+                                                        <%= new Date(session.lastSeenAt).toLocaleString() %>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div class="session-detail-item">
+                                                <i data-lucide="calendar"></i>
+                                                <div>
+                                                    <span class="session-detail-label">Created</span>
+                                                    <div class="session-detail-value">
+                                                        <%= new Date(session.createdAt).toLocaleString() %>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <% if (session.location.timezone) { %>
+                                                <div class="session-detail-item">
+                                                    <i data-lucide="globe"></i>
+                                                    <div>
+                                                        <span class="session-detail-label">Timezone</span>
+                                                        <div class="session-detail-value">
+                                                            <%= session.location.timezone %>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <% } %>
+
+                                                    <% if (session.location.lat && session.location.lon) { %>
+                                                        <div class="session-detail-item">
+                                                            <i data-lucide="navigation"></i>
+                                                            <div>
+                                                                <span class="session-detail-label">Coordinates</span>
+                                                                <div class="session-detail-value">
+                                                                    <%= session.location.lat.toFixed(4) %>, <%=
+                                                                            session.location.lon.toFixed(4) %>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <% } %>
+                                        </div>
+                                    </div>
+                                    <% }); %>
+
+                                        <div style="margin-top: var(--spacing-xl);">
+                                            <form action="/auth/logout-all" method="POST">
+                                                <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+                                                <button type="submit" class="btn btn-danger">
+                                                    <i data-lucide="log-out"></i>
+                                                    Logout All Devices
+                                                </button>
+                                            </form>
+                                        </div>
+                                        <% } else { %>
+                                            <p class="text-muted">No active sessions found.</p>
+                                            <% } %>
+                        </div>
+                    </div>
+</div>

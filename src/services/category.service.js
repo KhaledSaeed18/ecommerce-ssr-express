@@ -1,12 +1,23 @@
 import Category from '../models/Category.model.js';
+import Product from '../models/Product.model.js';
 
 class CategoryService {
     /**
-     * Get all categories
+     * Get all categories with product counts
      */
     async getAllCategories(includeInactive = false) {
         const filter = includeInactive ? {} : { isActive: true };
-        return await Category.find(filter).sort({ name: 1 });
+        const categories = await Category.find(filter).sort({ name: 1 }).lean();
+
+        // Add product count to each category
+        for (const category of categories) {
+            category.productCount = await Product.countDocuments({
+                category: category._id,
+                isActive: true
+            });
+        }
+
+        return categories;
     }
 
     /**

@@ -12,6 +12,7 @@ class AdminController {
             res.render('admin/dashboard', {
                 layout: 'layouts/admin',
                 title: 'Admin Dashboard',
+                currentPage: 'dashboard',
                 sessions,
                 csrfToken: req.csrfToken(),
             });

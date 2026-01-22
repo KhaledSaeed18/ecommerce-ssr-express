@@ -1,7 +1,41 @@
 import productService from '../services/product.service.js';
 import categoryService from '../services/category.service.js';
+import sessionService from '../services/session.service.js';
 
 class PublicController {
+    /**
+     * GET /
+     * Home page
+     */
+    async home(req, res) {
+        try {
+            // Get all active categories with product count
+            const categories = await categoryService.getAllCategories(false);
+
+            // Get featured products (randomly select 6 active products)
+            const allProducts = await productService.getAllProducts({
+                page: 1,
+                limit: 100,
+                isActive: true
+            });
+
+            // Shuffle and take 6 products
+            const shuffled = allProducts.products.sort(() => 0.5 - Math.random());
+            const featuredProducts = shuffled.slice(0, 6);
+
+            res.render('home', {
+                layout: 'layouts/main',
+                title: 'Home',
+                categories,
+                featuredProducts,
+                csrfToken: req.csrfToken ? req.csrfToken() : null
+            });
+        } catch (error) {
+            console.error('Home page error:', error);
+            res.status(500).send('Error loading home page');
+        }
+    }
+
     /**
      * GET /products
      * Public product listing

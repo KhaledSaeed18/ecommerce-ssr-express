@@ -1,89 +1,136 @@
 <div class="card">
     <div class="card-header">
         <h1 class="card-title">Admin Dashboard</h1>
-        <p class="card-description">Welcome to the admin panel, <%= user.email %>!</p>
+        <p class="card-description">Welcome to the admin panel, <%= user.email %>
+        </p>
+    </div>
+    <div class="card-content">
+        <div
+            style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: var(--spacing-lg);">
+            <div
+                style="background: linear-gradient(135deg, var(--color-olive) 0%, var(--color-sage) 100%); padding: var(--spacing-xl); border-radius: var(--radius-lg); color: var(--color-text-inverse);">
+                <i data-lucide="package" style="width: 32px; height: 32px; margin-bottom: var(--spacing-sm);"></i>
+                <h3 style="font-size: var(--font-size-2xl); margin: 0;">-</h3>
+                <p style="margin: 0; opacity: 0.9;">Total Products</p>
+            </div>
+            <div
+                style="background: linear-gradient(135deg, var(--color-terracotta) 0%, var(--color-sage) 100%); padding: var(--spacing-xl); border-radius: var(--radius-lg); color: var(--color-text-inverse);">
+                <i data-lucide="folder" style="width: 32px; height: 32px; margin-bottom: var(--spacing-sm);"></i>
+                <h3 style="font-size: var(--font-size-2xl); margin: 0;">-</h3>
+                <p style="margin: 0; opacity: 0.9;">Categories</p>
+            </div>
+            <div
+                style="background: linear-gradient(135deg, var(--color-brown) 0%, var(--color-terracotta) 100%); padding: var(--spacing-xl); border-radius: var(--radius-lg); color: var(--color-text-inverse);">
+                <i data-lucide="shield-check" style="width: 32px; height: 32px; margin-bottom: var(--spacing-sm);"></i>
+                <h3 style="font-size: var(--font-size-2xl); margin: 0;">
+                    <%= sessions.length %>
+                </h3>
+                <p style="margin: 0; opacity: 0.9;">Active Sessions</p>
+            </div>
+        </div>
     </div>
 </div>
 
-<div
-    style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1.5rem; margin-bottom: 2rem;">
-    <a href="/admin/products" class="card" style="text-decoration: none; color: inherit; transition: transform 0.2s;">
-        <div class="card-content" style="text-align: center;">
-            <i data-lucide="package" style="width: 48px; height: 48px; margin-bottom: 1rem; color: var(--primary);"></i>
-            <h3 style="margin: 0 0 0.5rem; font-size: 1.25rem;">Products</h3>
-            <p class="text-muted" style="margin: 0;">Manage your product catalog</p>
+<div class="card">
+    <div class="card-header">
+        <h2 class="card-title">Quick Actions</h2>
+    </div>
+    <div class="card-content">
+        <div style="display: flex; gap: var(--spacing-md); flex-wrap: wrap;">
+            <a href="/admin/products/new" class="btn btn-primary">
+                <i data-lucide="plus"></i>
+                Add Product
+            </a>
+            <a href="/admin/categories/new" class="btn btn-secondary">
+                <i data-lucide="folder-plus"></i>
+                Add Category
+            </a>
+            <a href="/products" class="btn btn-secondary">
+                <i data-lucide="store"></i>
+                View Store
+            </a>
         </div>
-    </a>
-    <a href="/admin/categories" class="card" style="text-decoration: none; color: inherit; transition: transform 0.2s;">
-        <div class="card-content" style="text-align: center;">
-            <i data-lucide="folder" style="width: 48px; height: 48px; margin-bottom: 1rem; color: var(--primary);"></i>
-            <h3 style="margin: 0 0 0.5rem; font-size: 1.25rem;">Categories</h3>
-            <p class="text-muted" style="margin: 0;">Organize product categories</p>
-        </div>
-    </a>
-    <a href="/products" class="card" style="text-decoration: none; color: inherit; transition: transform 0.2s;">
-        <div class="card-content" style="text-align: center;">
-            <i data-lucide="store" style="width: 48px; height: 48px; margin-bottom: 1rem; color: var(--primary);"></i>
-            <h3 style="margin: 0 0 0.5rem; font-size: 1.25rem;">Store Front</h3>
-            <p class="text-muted" style="margin: 0;">View public store</p>
-        </div>
-    </a>
+    </div>
 </div>
 
 <div class="card">
     <div class="card-header">
         <h2 class="card-title">Active Sessions</h2>
-        <p class="card-description">Manage your active login sessions across all devices.</p>
+        <p class="card-description">Your active login sessions across all devices</p>
     </div>
 
     <div class="card-content">
         <% if (sessions && sessions.length> 0) { %>
-            <table class="table">
-                <thead>
-                    <tr>
-                        <th>Device</th>
-                        <th>IP Address</th>
-                        <th>Location</th>
-                        <th>Last Seen</th>
-                        <th>Created</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <% sessions.forEach(session=> { %>
-                        <tr>
-                            <td>
-                                <%= session.device.browser || 'Unknown' %> on <%= session.device.os || 'Unknown' %>
-                            </td>
-                            <td>
-                                <%= session.ip %>
-                            </td>
-                            <td>
-                                <%= session.location.city || 'Unknown' %>, <%= session.location.country || 'Unknown' %>
-                            </td>
-                            <td>
-                                <%= new Date(session.lastSeenAt).toLocaleString() %>
-                            </td>
-                            <td>
-                                <%= new Date(session.createdAt).toLocaleString() %>
-                            </td>
-                        </tr>
-                        <% }); %>
-                </tbody>
-            </table>
-            <% } else { %>
-                <p class="text-muted">No active sessions found.</p>
-                <% } %>
-    </div>
-</div>
+            <% sessions.forEach(session=> { %>
+                <div class="session-card">
+                    <div class="session-header">
+                        <div>
+                            <div class="session-device">
+                                <i data-lucide="<%= session.device.os === 'Windows' ? 'monitor' : session.device.os === 'macOS' ? 'laptop' : session.device.os === 'Android' || session.device.os === 'iOS' ? 'smartphone' : 'monitor' %>"
+                                    style="width: 20px; height: 20px;"></i>
+                                <span>
+                                    <%= session.device.browser %> on <%= session.device.os %>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
 
-<div class="card">
-    <div class="card-header">
-        <h2 class="card-title">Actions</h2>
-    </div>
-    <div class="card-content">
-        <form action="/auth/logout-all" method="POST">
-            <input type="hidden" name="_csrf" value="<%= csrfToken %>">
-            <button type="submit" class="btn btn-danger">Logout All Devices</button>
-        </form>
+                    <div class="session-details">
+                        <div class="session-detail-item">
+                            <i data-lucide="map-pin"></i>
+                            <div>
+                                <span class="session-detail-label">Location</span>
+                                <div class="session-detail-value">
+                                    <%= session.location.city || 'Unknown' %>, <%= session.location.country || 'Unknown'
+                                            %>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="session-detail-item">
+                            <i data-lucide="wifi"></i>
+                            <div>
+                                <span class="session-detail-label">IP Address</span>
+                                <div class="session-detail-value">
+                                    <%= session.ip %>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="session-detail-item">
+                            <i data-lucide="clock"></i>
+                            <div>
+                                <span class="session-detail-label">Last Seen</span>
+                                <div class="session-detail-value">
+                                    <%= new Date(session.lastSeenAt).toLocaleString() %>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="session-detail-item">
+                            <i data-lucide="calendar"></i>
+                            <div>
+                                <span class="session-detail-label">Created</span>
+                                <div class="session-detail-value">
+                                    <%= new Date(session.createdAt).toLocaleString() %>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <% }); %>
+
+                    <div style="margin-top: var(--spacing-xl);">
+                        <form action="/auth/logout-all" method="POST">
+                            <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+                            <button type="submit" class="btn btn-danger">
+                                <i data-lucide="log-out"></i>
+                                Logout All Devices
+                            </button>
+                        </form>
+                    </div>
+                    <% } else { %>
+                        <p class="text-muted">No active sessions found.</p>
+                        <% } %>
     </div>
 </div>

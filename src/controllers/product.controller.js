@@ -24,6 +24,7 @@ class ProductController {
             res.render('admin/products/list', {
                 layout: 'layouts/admin',
                 title: 'Manage Products',
+                currentPage: 'products',
                 ...result,
                 categories,
                 currentCategory: category || '',
@@ -47,6 +48,7 @@ class ProductController {
             res.render('admin/products/form', {
                 layout: 'layouts/admin',
                 title: 'Create Product',
+                currentPage: 'products',
                 product: null,
                 categories,
                 csrfToken: req.csrfToken()
@@ -118,6 +120,7 @@ class ProductController {
             res.render('admin/products/form', {
                 layout: 'layouts/admin',
                 title: 'Create Product',
+                currentPage: 'products',
                 product: null,
                 categories,
                 error: error.message,
@@ -143,6 +146,7 @@ class ProductController {
             res.render('admin/products/form', {
                 layout: 'layouts/admin',
                 title: 'Edit Product',
+                currentPage: 'products',
                 product,
                 categories,
                 csrfToken: req.csrfToken()
@@ -213,6 +217,7 @@ class ProductController {
             res.render('admin/products/form', {
                 layout: 'layouts/admin',
                 title: 'Edit Product',
+                currentPage: 'products',
                 product,
                 categories,
                 error: error.message,

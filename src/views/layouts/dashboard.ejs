@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>
+        <%= title %> | SSR Store
+    </title>
+    <link rel="stylesheet" href="/css/style.css">
+    <script src="/lucide/lucide.min.js" defer></script>
+</head>
+
+<body>
+    <nav class="navbar">
+        <div class="navbar-container">
+            <a href="/" class="navbar-brand">
+                <i data-lucide="store" style="width: 24px; height: 24px;"></i>
+                SSR Store
+            </a>
+            <button class="navbar-toggle" id="navToggle" aria-label="Toggle navigation">
+                <i data-lucide="menu" style="width: 24px; height: 24px;"></i>
+            </button>
+            <div class="navbar-nav" id="navMenu">
+                <a href="/products" class="navbar-link">Products</a>
+                <span class="navbar-user">Welcome, <%= user.email %></span>
+                <form action="/auth/logout" method="POST" style="display: inline;">
+                    <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+                    <button type="submit" class="navbar-btn">Logout</button>
+                </form>
+            </div>
+        </div>
+    </nav>
+
+    <div class="dashboard-layout">
+        <aside class="dashboard-sidebar">
+            <div class="sidebar-section">
+                <h3 class="sidebar-section-title">Menu</h3>
+                <ul class="sidebar-nav">
+                    <li class="sidebar-nav-item">
+                        <a href="/dashboard" class="sidebar-nav-link <%= currentPage === 'overview' ? 'active' : '' %>">
+                            <i data-lucide="layout-dashboard"></i>
+                            Overview
+                        </a>
+                    </li>
+                    <li class="sidebar-nav-item">
+                        <a href="/dashboard/orders"
+                            class="sidebar-nav-link <%= currentPage === 'orders' ? 'active' : '' %>">
+                            <i data-lucide="shopping-cart"></i>
+                            My Orders
+                        </a>
+                    </li>
+                </ul>
+            </div>
+
+            <div class="sidebar-section">
+                <h3 class="sidebar-section-title">Account</h3>
+                <ul class="sidebar-nav">
+                    <li class="sidebar-nav-item">
+                        <a href="/account/profile"
+                            class="sidebar-nav-link <%= currentPage === 'profile' ? 'active' : '' %>">
+                            <i data-lucide="user"></i>
+                            Profile
+                        </a>
+                    </li>
+                    <li class="sidebar-nav-item">
+                        <a href="/account/security"
+                            class="sidebar-nav-link <%= currentPage === 'security' ? 'active' : '' %>">
+                            <i data-lucide="shield"></i>
+                            Security
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </aside>
+
+        <main class="dashboard-content">
+            <%- body %>
+        </main>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            lucide.createIcons();
+
+            // Mobile menu toggle
+            const navToggle = document.getElementById('navToggle');
+            const navMenu = document.getElementById('navMenu');
+
+            if (navToggle && navMenu) {
+                navToggle.addEventListener('click', () => {
+                    navMenu.classList.toggle('active');
+                });
+
+                // Close menu when clicking outside
+                document.addEventListener('click', (e) => {
+                    if (!navToggle.contains(e.target) && !navMenu.contains(e.target)) {
+                        navMenu.classList.remove('active');
+                    }
+                });
+            }
+        });
+    </script>
+</body>
+
+</html>

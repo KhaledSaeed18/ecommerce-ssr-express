@@ -15,14 +15,13 @@
     <nav class="navbar navbar-admin">
         <div class="navbar-container">
             <div class="flex items-center gap-md">
-                <a href="/" class="navbar-brand">SSR Store</a>
+                <a href="/" class="navbar-brand">
+                    <i data-lucide="store" style="width: 24px; height: 24px;"></i>
+                    SSR Store
+                </a>
                 <span class="badge badge-danger">ADMIN</span>
             </div>
             <div class="navbar-nav">
-                <a href="/admin/dashboard" class="navbar-link">Dashboard</a>
-                <a href="/admin/products" class="navbar-link">Products</a>
-                <a href="/admin/categories" class="navbar-link">Categories</a>
-                <a href="/products" class="navbar-link">View Store</a>
                 <span class="navbar-user">Welcome, <%= user.email %></span>
                 <form action="/auth/logout" method="POST" style="display: inline;">
                     <input type="hidden" name="_csrf" value="<%= csrfToken %>">
@@ -32,11 +31,72 @@
         </div>
     </nav>
 
-    <div class="page-container">
-        <div class="container">
+    <div class="dashboard-layout">
+        <aside class="dashboard-sidebar">
+            <div class="sidebar-section">
+                <h3 class="sidebar-section-title">Dashboard</h3>
+                <ul class="sidebar-nav">
+                    <li class="sidebar-nav-item">
+                        <a href="/admin/dashboard"
+                            class="sidebar-nav-link <%= (typeof currentPage !== 'undefined' && currentPage === 'dashboard') ? 'active' : '' %>">
+                            <i data-lucide="layout-dashboard"></i>
+                            Overview
+                        </a>
+                    </li>
+                </ul>
+            </div>
+
+            <div class="sidebar-section">
+                <h3 class="sidebar-section-title">Management</h3>
+                <ul class="sidebar-nav">
+                    <li class="sidebar-nav-item">
+                        <a href="/admin/products"
+                            class="sidebar-nav-link <%= (typeof currentPage !== 'undefined' && currentPage === 'products') ? 'active' : '' %>">
+                            <i data-lucide="package"></i>
+                            Products
+                        </a>
+                    </li>
+                    <li class="sidebar-nav-item">
+                        <a href="/admin/categories"
+                            class="sidebar-nav-link <%= (typeof currentPage !== 'undefined' && currentPage === 'categories') ? 'active' : '' %>">
+                            <i data-lucide="folder"></i>
+                            Categories
+                        </a>
+                    </li>
+                </ul>
+            </div>
+
+            <div class="sidebar-section">
+                <h3 class="sidebar-section-title">Store</h3>
+                <ul class="sidebar-nav">
+                    <li class="sidebar-nav-item">
+                        <a href="/products" class="sidebar-nav-link">
+                            <i data-lucide="store"></i>
+                            View Store
+                        </a>
+                    </li>
+                </ul>
+            </div>
+
+            <div class="sidebar-section">
+                <h3 class="sidebar-section-title">Account</h3>
+                <ul class="sidebar-nav">
+                    <li class="sidebar-nav-item">
+                        <a href="/account/security"
+                            class="sidebar-nav-link <%= (typeof currentPage !== 'undefined' && currentPage === 'security') ? 'active' : '' %>">
+                            <i data-lucide="shield"></i>
+                            Security
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </aside>
+
+        <main class="dashboard-content">
             <%- body %>
-        </div>
+        </main>
     </div>
+
     <script>
         document.addEventListener('DOMContentLoaded', () => {
             lucide.createIcons();
