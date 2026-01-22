@@ -49,6 +49,7 @@ app.use(cookieParser());
 
 // Static files
 app.use(express.static(path.join(__dirname, '../public')));
+app.use('/lucide', express.static(path.join(__dirname, '../node_modules/lucide/dist/umd')));
 
 // Session middleware
 app.use(sessionMiddleware);

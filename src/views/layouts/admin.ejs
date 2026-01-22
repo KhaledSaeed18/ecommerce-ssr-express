@@ -8,6 +8,7 @@
         <%= title %> | SSR Store
     </title>
     <link rel="stylesheet" href="/css/style.css">
+    <script src="/lucide/lucide.min.js" defer></script>
 </head>
 
 <body>
@@ -32,6 +33,11 @@
             <%- body %>
         </div>
     </div>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            lucide.createIcons();
+        });
+    </script>
 </body>
 
 </html>
