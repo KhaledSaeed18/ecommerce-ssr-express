@@ -4,10 +4,6 @@
         <h1 class="hero-title">Welcome to SSR Store</h1>
         <p class="hero-description">Discover amazing products with authentic quality and timeless style</p>
         <div class="hero-actions">
-            <a href="/products" class="btn btn-lg" style="background: var(--color-cream); color: var(--color-brown);">
-                <i data-lucide="shopping-bag"></i>
-                Shop Now
-            </a>
             <% if (!isAuthenticated) { %>
                 <a href="/auth/register" class="btn btn-lg"
                     style="background: transparent; border: 2px solid var(--color-cream); color: var(--color-cream);">
@@ -15,6 +11,11 @@
                     Join Us
                 </a>
                 <% } else { %>
+                    <a href="/products" class="btn btn-lg"
+                        style="background: var(--color-cream); color: var(--color-brown);">
+                        <i data-lucide="shopping-bag"></i>
+                        Shop Now
+                    </a>
                     <a href="<%= userRole === 'admin' ? '/admin/dashboard' : '/dashboard' %>" class="btn btn-lg"
                         style="background: transparent; border: 2px solid var(--color-cream); color: var(--color-cream);">
                         <i data-lucide="layout-dashboard"></i>
@@ -60,7 +61,7 @@
                         style="text-decoration: none; color: inherit; padding: 0; overflow: hidden;">
                         <% if (product.images && product.images.length> 0) { %>
                             <div
-                                style="width: 100%; height: 200px; background-image: url('<%= product.images[0].url %>'); background-size: cover; background-position: center;">
+                                style="width: 100%; height: 200px; background-image: url('<%= product.images[0].url %>'); background-size: contain; background-position: center; background-repeat: no-repeat; background-color: white">
                             </div>
                             <% } else { %>
                                 <div
@@ -74,7 +75,7 @@
                                             <%= product.name %>
                                         </h3>
                                         <p class="text-muted"
-                                            style="font-size: var(--font-size-sm); margin-bottom: var(--spacing-md); overflow: hidden; text-overflow: ellipsis; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical;">
+                                            style="font-size: var(--font-size-sm); margin-bottom: var(--spacing-md); overflow: hidden; text-overflow: ellipsis; display: -webkit-box; -webkit-line-clamp: 2; line-clamp: 2; -webkit-box-orient: vertical;">
                                             <%= product.description %>
                                         </p>
                                         <div

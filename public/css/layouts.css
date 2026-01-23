@@ -308,6 +308,7 @@
 
 .hero-content {
     max-width: 800px;
+    padding: 10px var(--spacing-md);
     margin: 0 auto;
 }
 
