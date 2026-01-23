@@ -11,17 +11,19 @@
                     Join Us
                 </a>
                 <% } else { %>
-                    <a href="/products" class="btn btn-lg"
-                        style="background: var(--color-cream); color: var(--color-brown);">
-                        <i data-lucide="shopping-bag"></i>
-                        Shop Now
-                    </a>
-                    <a href="<%= userRole === 'admin' ? '/admin/dashboard' : '/dashboard' %>" class="btn btn-lg"
-                        style="background: transparent; border: 2px solid var(--color-cream); color: var(--color-cream);">
-                        <i data-lucide="layout-dashboard"></i>
-                        Dashboard
-                    </a>
-                    <% } %>
+                    <% if (userRole !=='admin' ) { %>
+                        <a href="/products" class="btn btn-lg"
+                            style="background: var(--color-cream); color: var(--color-brown);">
+                            <i data-lucide="shopping-bag"></i>
+                            Shop Now
+                        </a>
+                        <% } %>
+                            <a href="<%= userRole === 'admin' ? '/admin/dashboard' : '/dashboard' %>" class="btn btn-lg"
+                                style="background: transparent; border: 2px solid var(--color-cream); color: var(--color-cream);">
+                                <i data-lucide="layout-dashboard"></i>
+                                Dashboard
+                            </a>
+                            <% } %>
         </div>
     </div>
 </section>
