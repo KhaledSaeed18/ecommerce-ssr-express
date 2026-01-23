@@ -45,12 +45,11 @@ categorySchema.pre('validate', function () {
 });
 
 // Create slug from name before updating
-categorySchema.pre('findOneAndUpdate', function (next) {
+categorySchema.pre('findOneAndUpdate', function () {
     const update = this.getUpdate();
     if (update.name) {
         update.slug = generateSlug(update.name);
     }
-    next();
 });
 
 // Virtual for products count (will be populated when needed)
