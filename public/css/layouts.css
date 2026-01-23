@@ -421,6 +421,7 @@
 .footer-section ul {
     list-style: none;
     padding: 0;
+    margin: 0;
 }
 
 .footer-section li {
@@ -436,17 +437,6 @@
 
 .footer-section a:hover {
     opacity: 1;
-}
-
-.footer-bottom {
-    max-width: 1400px;
-    margin: 0 auto;
-    padding: var(--spacing-lg) var(--spacing-xl) 0;
-    border-top: 1px solid rgba(240, 234, 210, 0.2);
-    text-align: center;
-    margin-top: var(--spacing-xl);
-    font-size: var(--font-size-sm);
-    opacity: 0.8;
 }
 
 /* Dashboard Layout */
