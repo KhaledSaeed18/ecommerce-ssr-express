@@ -56,12 +56,6 @@ const productSchema = new mongoose.Schema({
         min: [0, 'Stock cannot be negative'],
         default: 0
     },
-    sku: {
-        type: String,
-        unique: true,
-        sparse: true,
-        trim: true
-    },
     isActive: {
         type: Boolean,
         default: true

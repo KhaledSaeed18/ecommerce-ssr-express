@@ -102,9 +102,6 @@ class ProductController {
             if (comparePrice) {
                 productData.comparePrice = parseFloat(comparePrice);
             }
-            if (sku) {
-                productData.sku = sku;
-            }
 
             await productService.createProduct(productData);
             res.redirect('/admin/products?success=Product created successfully');
@@ -187,9 +184,6 @@ class ProductController {
 
             if (comparePrice) {
                 updateData.comparePrice = parseFloat(comparePrice);
-            }
-            if (sku) {
-                updateData.sku = sku;
             }
 
             // Handle new images
