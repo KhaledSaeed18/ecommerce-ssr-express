@@ -9,6 +9,7 @@
     </title>
     <link rel="stylesheet" href="/css/style.css">
     <script src="/lucide/lucide.min.js" defer></script>
+    <script src="/js/product-image-modal.js" defer></script>
 </head>
 
 <body>
@@ -26,7 +27,6 @@
                 <% if (isAuthenticated) { %>
                     <a href="<%= userRole === 'admin' ? '/admin/dashboard' : '/dashboard' %>"
                         class="navbar-link">Dashboard</a>
-                    <span class="navbar-user">Welcome, <%= user.email %></span>
                     <form action="/auth/logout" method="POST" style="display: inline;">
                         <% if (typeof csrfToken !=='undefined' ) { %>
                             <input type="hidden" name="_csrf" value="<%= csrfToken %>">
