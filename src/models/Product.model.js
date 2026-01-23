@@ -103,7 +103,6 @@ productSchema.pre('findOneAndUpdate', function (next) {
 
 // Index for faster queries
 productSchema.index({ category: 1, isActive: 1 });
-productSchema.index({ slug: 1 });
 productSchema.index({ price: 1 });
 
 const Product = mongoose.model('Product', productSchema);
