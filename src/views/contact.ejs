@@ -1,0 +1,133 @@
+<!-- Contact Hero Section -->
+<section class="hero" style="background: linear-gradient(135deg, var(--color-sage) 0%, var(--color-olive) 100%);">
+    <div class="hero-content">
+        <h1 class="hero-title">Get in Touch</h1>
+        <p class="hero-description">We'd love to hear from you. Send us a message and we'll respond as soon as possible.
+        </p>
+    </div>
+</section>
+
+<div class="container">
+    <section style="max-width: 800px; margin: 0 auto; padding: var(--spacing-2xl) 0;">
+
+        <% if (success) { %>
+            <div class="alert alert-success"
+                style="margin-bottom: var(--spacing-xl); padding: var(--spacing-lg); background-color: #d4edda; border: 1px solid #c3e6cb; border-radius: var(--radius-lg); color: #155724;">
+                <div style="display: flex; align-items: center; gap: var(--spacing-sm);">
+                    <i data-lucide="check-circle" style="width: 24px; height: 24px;"></i>
+                    <div>
+                        <strong>Message Sent Successfully!</strong>
+                        <p style="margin: var(--spacing-xs) 0 0 0;">Thank you for contacting us. We'll get back to you
+                            soon.</p>
+                    </div>
+                </div>
+            </div>
+            <% } %>
+
+                <% if (error) { %>
+                    <div class="alert alert-danger"
+                        style="margin-bottom: var(--spacing-xl); padding: var(--spacing-lg); background-color: #f8d7da; border: 1px solid #f5c6cb; border-radius: var(--radius-lg); color: #721c24;">
+                        <div style="display: flex; align-items: center; gap: var(--spacing-sm);">
+                            <i data-lucide="alert-circle" style="width: 24px; height: 24px;"></i>
+                            <div>
+                                <strong>Error!</strong>
+                                <p style="margin: var(--spacing-xs) 0 0 0;">
+                                    <%= error %>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                    <% } %>
+
+                        <div class="card">
+                            <h2
+                                style="margin-bottom: var(--spacing-xl); font-size: var(--font-size-2xl); color: var(--color-text-primary);">
+                                Send Us a Message
+                            </h2>
+
+                            <form action="/contact" method="POST">
+                                <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+
+                                <div class="form-group">
+                                    <label for="fullName" class="form-label">Full Name <span
+                                            style="color: var(--color-danger);">*</span></label>
+                                    <input type="text" id="fullName" name="fullName" class="form-input"
+                                        placeholder="Enter your full name" required>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="email" class="form-label">Email Address <span
+                                            style="color: var(--color-danger);">*</span></label>
+                                    <input type="email" id="email" name="email" class="form-input"
+                                        placeholder="your.email@example.com" required>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="subject" class="form-label">Subject <span
+                                            style="color: var(--color-danger);">*</span></label>
+                                    <input type="text" id="subject" name="subject" class="form-input"
+                                        placeholder="What is this about?" required>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="message" class="form-label">Message <span
+                                            style="color: var(--color-danger);">*</span></label>
+                                    <textarea id="message" name="message" class="form-textarea" rows="6"
+                                        placeholder="Write your message here..." required></textarea>
+                                </div>
+
+                                <div style="display: flex; gap: var(--spacing-md); justify-content: flex-end;">
+                                    <a href="/" class="btn btn-outline">
+                                        <i data-lucide="arrow-left"></i>
+                                        Back to Home
+                                    </a>
+                                    <button type="submit" class="btn btn-primary">
+                                        <i data-lucide="send"></i>
+                                        Send Message
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+    </section>
+</div>
+
+<!-- Footer -->
+<footer class="footer">
+    <div class="footer-content">
+        <div class="footer-section">
+            <img src="/assets/images/logo.png" alt="SSR Store Logo" class="footer-logo">
+        </div>
+        <div class="footer-section">
+            <h3>Shop</h3>
+            <ul>
+                <li><a href="/products">All Products</a></li>
+                <% if (categories && categories.length> 0) { %>
+                    <% categories.slice(0, 3).forEach(category=> { %>
+                        <li><a href="/categories/<%= category.slug %>">
+                                <%= category.name %>
+                            </a></li>
+                        <% }); %>
+                            <% } %>
+            </ul>
+        </div>
+        <div class="footer-section">
+            <h3>Account</h3>
+            <ul>
+                <% if (isAuthenticated) { %>
+                    <li><a href="<%= userRole === 'admin' ? '/admin/dashboard' : '/dashboard' %>">Dashboard</a></li>
+                    <li><a href="/account/security">Security</a></li>
+                    <% } else { %>
+                        <li><a href="/auth/login">Login</a></li>
+                        <li><a href="/auth/register">Register</a></li>
+                        <% } %>
+            </ul>
+        </div>
+        <div class="footer-section">
+            <h3>About</h3>
+            <ul>
+                <li><a href="/about">About Us</a></li>
+                <li><a href="/contact">Contact</a></li>
+            </ul>
+        </div>
+    </div>
+</footer>

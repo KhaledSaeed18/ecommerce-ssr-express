@@ -63,6 +63,18 @@
                             Categories
                         </a>
                     </li>
+                    <li class="sidebar-nav-item">
+                        <a href="/admin/contacts"
+                            class="sidebar-nav-link <%= (typeof currentPage !== 'undefined' && currentPage === 'contacts') ? 'active' : '' %>">
+                            <i data-lucide="mail"></i>
+                            Messages
+                            <% if (typeof unreadMessages !=='undefined' && unreadMessages> 0) { %>
+                                <span class="badge badge-danger" style="margin-left: var(--spacing-xs);">
+                                    <%= unreadMessages %>
+                                </span>
+                                <% } %>
+                        </a>
+                    </li>
                 </ul>
             </div>
 

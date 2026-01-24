@@ -10,4 +10,10 @@ const router = express.Router();
  */
 router.get('/', csrfProtection, publicController.home);
 
+/**
+ * GET /about
+ * About page - accessible to all
+ */
+router.get('/about', csrfProtection, publicController.about);
+
 export default router;

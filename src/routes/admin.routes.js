@@ -12,4 +12,11 @@ const router = express.Router();
  */
 router.get('/dashboard', requireAuth, requireRole('admin'), csrfProtection, adminController.showDashboard);
 
+/**
+ * Contact messages management
+ */
+router.get('/contacts', requireAuth, requireRole('admin'), csrfProtection, adminController.listContacts);
+router.post('/contacts/:id/mark-read', requireAuth, requireRole('admin'), csrfProtection, adminController.markContactAsRead);
+router.post('/contacts/:id/delete', requireAuth, requireRole('admin'), csrfProtection, adminController.deleteContact);
+
 export default router;
