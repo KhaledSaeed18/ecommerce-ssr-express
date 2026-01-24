@@ -13,6 +13,10 @@
     </div>
     <% } %>
 
+        <div class="alert alert-error" id="passwordValidationError" style="display: none;">
+            Please ensure your password meets all requirements.
+        </div>
+
         <form action="/auth/register" method="POST">
             <input type="hidden" name="_csrf" value="<%= csrfToken %>">
 

@@ -82,10 +82,23 @@
                 // Form validation
                 const form = passwordInput.closest('form');
                 if (form) {
+                    const errorAlert = document.getElementById('passwordValidationError');
+
                     form.addEventListener('submit', (e) => {
                         if (passwordInput.dataset.valid !== 'true') {
                             e.preventDefault();
-                            alert('Please ensure your password meets all requirements.');
+
+                            if (errorAlert) {
+                                errorAlert.style.display = 'block';
+                                errorAlert.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+                            }
+                        }
+                    });
+
+                    // Hide error when user starts typing
+                    passwordInput.addEventListener('input', () => {
+                        if (errorAlert && errorAlert.style.display === 'block') {
+                            errorAlert.style.display = 'none';
                         }
                     });
                 }
