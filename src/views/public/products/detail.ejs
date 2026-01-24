@@ -1,19 +1,24 @@
-<div class="container" style="max-width: 1200px; margin: 2rem auto; padding: 0 1rem;">
+<div class="container product-detail-container">
+    <!-- Back Button -->
+    <div class="back-button-container">
+        <a href="/products" class="btn btn-secondary">
+            <i data-lucide="arrow-left"></i>
+            Back to Products
+        </a>
+    </div>
+
     <div class="card">
-        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem;">
+        <div class="product-grid">
             <!-- Product Images -->
-            <div>
+            <div class="product-images">
                 <% if (product.images && product.images.length> 0) { %>
-                    <div id="mainImage"
-                        style="width: 100%; height: 500px; background-size: cover; background-position: center; background-repeat: no-repeat; border-radius: 8px; margin-bottom: 1rem; border: 1px solid #ddd; background-image: url('<%= product.images[0].url %>'); cursor: pointer;"
+                    <div id="mainImage" class="main-image"
+                        style="background-image: url('<%= product.images[0].url %>');"
                         data-current-url="<%= product.images[0].url %>">
                     </div>
-                    <div
-                        style="display: grid; grid-template-columns: repeat(auto-fill, minmax(100px, 1fr)); gap: 0.5rem;">
+                    <div class="thumbnails-grid">
                         <% product.images.forEach((image, index)=> { %>
-                            <img src="<%= image.url %>" alt="<%= image.alt %>"
-                                style="width: 100%; height: 100px; border-radius: 4px; cursor: pointer; border: 2px solid; object-fit: cover;"
-                                class="thumbnail">
+                            <img src="<%= image.url %>" alt="<%= image.alt %>" class="thumbnail">
                             <% }); %>
                     </div>
                     <% } else { %>
@@ -25,7 +30,7 @@
             </div>
 
             <!-- Product Details -->
-            <div style="padding: 1rem 0;">
+            <div class="product-info">
                 <% if (product.category) { %>
                     <a href="/categories/<%= product.category.slug %>" class="badge badge-secondary"
                         style="text-decoration: none; margin-bottom: 1rem; display: inline-block;">
@@ -37,7 +42,7 @@
                             <%= product.name %>
                         </h1>
 
-                        <div class="flex items-center gap-md" style="margin-bottom: 1rem;">
+                        <div class="price-container">
                             <span style="font-size: 2rem; font-weight: bold; color: var(--primary);">
                                 $<%= product.price.toFixed(2) %>
                             </span>
@@ -52,7 +57,7 @@
                                 <% } %>
                         </div>
 
-                        <div style="padding: 1rem; background: #f5f5f5; border-radius: 8px; margin-bottom: 1.5rem;">
+                        <div class="stock-info">
                             <div class="flex items-center gap-sm" style="margin-bottom: 0.5rem;">
                                 <i data-lucide="package" style="width: 20px; height: 20px;"></i>
                                 <strong>Stock:</strong>
@@ -84,14 +89,6 @@
                                 <% } %>
             </div>
         </div>
-    </div>
-
-    <!-- Back Button -->
-    <div style="margin-top: 2rem;">
-        <a href="/products" class="btn btn-secondary">
-            <i data-lucide="arrow-left"></i>
-            Back to Products
-        </a>
     </div>
 </div>
 
