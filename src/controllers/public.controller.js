@@ -152,6 +152,27 @@ class PublicController {
             res.status(500).send('Error loading category');
         }
     }
+
+    /**
+     * GET /about
+     * About page
+     */
+    async about(req, res) {
+        try {
+            // Get all active categories for footer
+            const categories = await categoryService.getAllCategories(false);
+
+            res.render('about', {
+                layout: 'layouts/main',
+                title: 'About Us',
+                categories,
+                csrfToken: req.csrfToken ? req.csrfToken() : null
+            });
+        } catch (error) {
+            console.error('About page error:', error);
+            res.status(500).send('Error loading about page');
+        }
+    }
 }
 
 export default new PublicController();

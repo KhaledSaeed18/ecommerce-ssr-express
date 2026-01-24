@@ -21,4 +21,10 @@ router.get('/products/:slug', publicController.showProduct);
  */
 router.get('/categories/:slug', publicController.showCategory);
 
+/**
+ * GET /about
+ * About page
+ */
+router.get('/about', publicController.about);
+
 export default router;
