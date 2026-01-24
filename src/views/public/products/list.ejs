@@ -12,102 +12,165 @@
         </div>
 
         <div class="card-content">
-            <!-- Results Info -->
-            <div class="flex justify-between items-center mb-md">
-                <p class="text-muted">
-                    Showing <%= products.length %> of <%= total %> products
-                </p>
-            </div>
+            <!-- Filters Section (only show on all products page) -->
+            <% if (!currentCategory) { %>
+                <div class="filters-section"
+                    style="margin-bottom: var(--spacing-xl); padding: var(--spacing-lg); background-color: var(--color-sage); border-radius: var(--radius-md);">
+                    <form method="GET" action="/products" class="filters-form">
+                        <div class="flex gap-md" style="flex-wrap: wrap; align-items: flex-end;">
+                            <!-- Search Filter -->
+                            <div class="form-group" style="flex: 1; min-width: 250px; margin-bottom: 0;">
+                                <label for="search" class="form-label">Search Products</label>
+                                <input type="text" id="search" name="search" class="form-input"
+                                    placeholder="Search by name or description..." value="<%= filters.search || '' %>"
+                                    style="margin-bottom: 0;">
+                            </div>
 
-            <!-- Products Grid -->
-            <% if (products && products.length> 0) { %>
-                <div class="products-grid">
-                    <% products.forEach(product=> { %>
-                        <a href="/products/<%= product.slug %>" class="card"
-                            style="text-decoration: none; color: inherit; transition: transform 0.2s, box-shadow 0.2s;"
-                            onmouseover="this.style.transform='translateY(-4px)'; this.style.boxShadow='0 8px 16px rgba(0,0,0,0.1)';"
-                            onmouseout="this.style.transform=''; this.style.boxShadow='';">
-                            <div style="position: relative;">
-                                <% if (product.images && product.images.length> 0) { %>
-                                    <img src="<%= product.images[0].url %>" alt="<%= product.images[0].alt %>"
-                                        style="width: 100%; height: 250px; object-fit: cover; border-radius: 4px 4px 0 0;">
-                                    <% } else { %>
-                                        <div
-                                            style="width: 100%; height: 250px; background: #e0e0e0; display: flex; align-items: center; justify-content: center; border-radius: 4px 4px 0 0;">
-                                            <i data-lucide="image" style="width: 48px; height: 48px; opacity: 0.3;"></i>
-                                        </div>
-                                        <% } %>
-                                            <% if (product.comparePrice && product.comparePrice> product.price) { %>
-                                                <span class="badge badge-danger"
-                                                    style="position: absolute; top: 10px; right: 10px;">
-                                                    -<%= Math.round(((product.comparePrice - product.price) /
-                                                        product.comparePrice) * 100) %>%
-                                                </span>
+                            <!-- Category Filter -->
+                            <div class="form-group" style="flex: 0 0 200px; margin-bottom: 0;">
+                                <label for="category" class="form-label">Category</label>
+                                <select id="category" name="category" class="form-select" style="margin-bottom: 0;">
+                                    <option value="">All Categories</option>
+                                    <% if (typeof categories !=='undefined' && categories) { %>
+                                        <% categories.forEach(cat=> { %>
+                                            <option value="<%= cat.slug %>" <%=filters.category===cat.slug ? 'selected'
+                                                : '' %>>
+                                                <%= cat.name %>
+                                            </option>
+                                            <% }); %>
                                                 <% } %>
-                                                    <% if (product.stock===0) { %>
-                                                        <span class="badge badge-danger"
-                                                            style="position: absolute; top: 10px; left: 10px;">
-                                                            Out of Stock
-                                                        </span>
-                                                        <% } %>
+                                </select>
                             </div>
-                            <div class="card-content">
-                                <h3 style="margin: 0 0 0.5rem; font-size: 1.125rem; font-weight: 600;">
-                                    <%= product.name %>
-                                </h3>
-                                <p class="text-muted"
-                                    style="margin: 0 0 0.5rem; font-size: 0.875rem; overflow: hidden; text-overflow: ellipsis; display: -webkit-box; -webkit-line-clamp: 2; line-clamp: 2; -webkit-box-orient: vertical;">
-                                    <%= product.description %>
-                                </p>
-                                <div class="flex items-center gap-sm">
-                                    <span style="font-size: 1.25rem; font-weight: bold; color: var(--primary);">
-                                        $<%= product.price.toFixed(2) %>
-                                    </span>
-                                    <% if (product.comparePrice) { %>
-                                        <span class="text-muted"
-                                            style="text-decoration: line-through; font-size: 0.875rem;">
-                                            $<%= product.comparePrice.toFixed(2) %>
-                                        </span>
-                                        <% } %>
-                                </div>
-                                <% if (product.category) { %>
-                                    <span class="badge badge-secondary" style="margin-top: 0.5rem;">
-                                        <%= product.category.name %>
-                                    </span>
-                                    <% } %>
-                            </div>
-                        </a>
-                        <% }); %>
-                </div>
 
-                <!-- Pagination -->
-                <% if (totalPages> 1) { %>
-                    <div class="flex justify-center gap-md pagination-controls">
-                        <% if (page> 1) { %>
-                            <a href="?page=<%= page - 1 %><%= filters.category ? '&category=' + filters.category : '' %><%= filters.search ? '&search=' + filters.search : '' %><%= filters.minPrice ? '&minPrice=' + filters.minPrice : '' %><%= filters.maxPrice ? '&maxPrice=' + filters.maxPrice : '' %><%= filters.sort ? '&sort=' + filters.sort : '' %>"
-                                class="btn btn-secondary">
-                                <i data-lucide="chevron-left"></i>
-                                Previous
-                            </a>
-                            <% } %>
-                                <span class="text-muted" style="display: flex; align-items: center; padding: 0 1rem;">
-                                    Page <%= page %> of <%= totalPages %>
-                                </span>
-                                <% if (page < totalPages) { %>
-                                    <a href="?page=<%= page + 1 %><%= filters.category ? '&category=' + filters.category : '' %><%= filters.search ? '&search=' + filters.search : '' %><%= filters.minPrice ? '&minPrice=' + filters.minPrice : '' %><%= filters.maxPrice ? '&maxPrice=' + filters.maxPrice : '' %><%= filters.sort ? '&sort=' + filters.sort : '' %>"
-                                        class="btn btn-secondary">
-                                        Next
-                                        <i data-lucide="chevron-right"></i>
+                            <!-- Filter Buttons -->
+                            <div class="flex gap-sm" style="margin-bottom: 0;">
+                                <button type="submit" class="btn btn-primary">
+                                    <i data-lucide="search" style="width: 16px; height: 16px;"></i>
+                                    Search
+                                </button>
+                                <% if (filters.search || filters.category) { %>
+                                    <a href="/products" class="btn btn-ghost">
+                                        <i data-lucide="x" style="width: 16px; height: 16px;"></i>
+                                        Clear
                                     </a>
                                     <% } %>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <% } %>
+
+                    <!-- Results Info -->
+                    <div class="flex justify-between items-center mb-md">
+                        <p class="text-muted">
+                            Showing <%= products.length %> of <%= total %> products
+                                    <% if (filters.search) { %>
+                                        <span
+                                            style="font-weight: var(--font-weight-semibold); color: var(--color-primary);">
+                                            for "<%= filters.search %>"
+                                        </span>
+                                        <% } %>
+                                            <% if (filters.category && !currentCategory) { %>
+                                                <span
+                                                    style="font-weight: var(--font-weight-semibold); color: var(--color-primary);">
+                                                    in <%= filters.category %>
+                                                </span>
+                                                <% } %>
+                        </p>
                     </div>
-                    <% } %>
-                        <% } else { %>
-                            <div style="text-align: center; padding: 3rem 1rem;">
-                                <i data-lucide="package" style="width: 64px; height: 64px; opacity: 0.3;"></i>
-                                <h3 style="margin-top: 1rem;">No products found</h3>
+
+                    <!-- Products Grid -->
+                    <% if (products && products.length> 0) { %>
+                        <div class="products-grid">
+                            <% products.forEach(product=> { %>
+                                <a href="/products/<%= product.slug %>" class="card"
+                                    style="text-decoration: none; color: inherit; transition: transform 0.2s, box-shadow 0.2s;"
+                                    onmouseover="this.style.transform='translateY(-4px)'; this.style.boxShadow='0 8px 16px rgba(0,0,0,0.1)';"
+                                    onmouseout="this.style.transform=''; this.style.boxShadow='';">
+                                    <div style="position: relative;">
+                                        <% if (product.images && product.images.length> 0) { %>
+                                            <img src="<%= product.images[0].url %>" alt="<%= product.images[0].alt %>"
+                                                style="width: 100%; height: 250px; object-fit: cover; border-radius: 4px 4px 0 0;">
+                                            <% } else { %>
+                                                <div
+                                                    style="width: 100%; height: 250px; background: #e0e0e0; display: flex; align-items: center; justify-content: center; border-radius: 4px 4px 0 0;">
+                                                    <i data-lucide="image"
+                                                        style="width: 48px; height: 48px; opacity: 0.3;"></i>
+                                                </div>
+                                                <% } %>
+                                                    <% if (product.comparePrice && product.comparePrice> product.price)
+                                                        { %>
+                                                        <span class="badge badge-danger"
+                                                            style="position: absolute; top: 10px; right: 10px;">
+                                                            -<%= Math.round(((product.comparePrice - product.price) /
+                                                                product.comparePrice) * 100) %>%
+                                                        </span>
+                                                        <% } %>
+                                                            <% if (product.stock===0) { %>
+                                                                <span class="badge badge-danger"
+                                                                    style="position: absolute; top: 10px; left: 10px;">
+                                                                    Out of Stock
+                                                                </span>
+                                                                <% } %>
+                                    </div>
+                                    <div class="card-content">
+                                        <h3 style="margin: 0 0 0.5rem; font-size: 1.125rem; font-weight: 600;">
+                                            <%= product.name %>
+                                        </h3>
+                                        <p class="text-muted"
+                                            style="margin: 0 0 0.5rem; font-size: 0.875rem; overflow: hidden; text-overflow: ellipsis; display: -webkit-box; -webkit-line-clamp: 2; line-clamp: 2; -webkit-box-orient: vertical;">
+                                            <%= product.description %>
+                                        </p>
+                                        <div class="flex items-center gap-sm">
+                                            <span style="font-size: 1.25rem; font-weight: bold; color: var(--primary);">
+                                                $<%= product.price.toFixed(2) %>
+                                            </span>
+                                            <% if (product.comparePrice) { %>
+                                                <span class="text-muted"
+                                                    style="text-decoration: line-through; font-size: 0.875rem;">
+                                                    $<%= product.comparePrice.toFixed(2) %>
+                                                </span>
+                                                <% } %>
+                                        </div>
+                                        <% if (product.category) { %>
+                                            <span class="badge badge-secondary" style="margin-top: 0.5rem;">
+                                                <%= product.category.name %>
+                                            </span>
+                                            <% } %>
+                                    </div>
+                                </a>
+                                <% }); %>
+                        </div>
+
+                        <!-- Pagination -->
+                        <% if (totalPages> 1) { %>
+                            <div class="flex justify-center gap-md pagination-controls">
+                                <% if (page> 1) { %>
+                                    <a href="?page=<%= page - 1 %><%= filters.category ? '&category=' + filters.category : '' %><%= filters.search ? '&search=' + filters.search : '' %><%= filters.minPrice ? '&minPrice=' + filters.minPrice : '' %><%= filters.maxPrice ? '&maxPrice=' + filters.maxPrice : '' %><%= filters.sort ? '&sort=' + filters.sort : '' %>"
+                                        class="btn btn-secondary">
+                                        <i data-lucide="chevron-left"></i>
+                                        Previous
+                                    </a>
+                                    <% } %>
+                                        <span class="text-muted"
+                                            style="display: flex; align-items: center; padding: 0 1rem;">
+                                            Page <%= page %> of <%= totalPages %>
+                                        </span>
+                                        <% if (page < totalPages) { %>
+                                            <a href="?page=<%= page + 1 %><%= filters.category ? '&category=' + filters.category : '' %><%= filters.search ? '&search=' + filters.search : '' %><%= filters.minPrice ? '&minPrice=' + filters.minPrice : '' %><%= filters.maxPrice ? '&maxPrice=' + filters.maxPrice : '' %><%= filters.sort ? '&sort=' + filters.sort : '' %>"
+                                                class="btn btn-secondary">
+                                                Next
+                                                <i data-lucide="chevron-right"></i>
+                                            </a>
+                                            <% } %>
                             </div>
                             <% } %>
+                                <% } else { %>
+                                    <div style="text-align: center; padding: 3rem 1rem;">
+                                        <i data-lucide="package" style="width: 64px; height: 64px; opacity: 0.3;"></i>
+                                        <h3 style="margin-top: 1rem;">No products found</h3>
+                                    </div>
+                                    <% } %>
         </div>
     </div>
 </div>

@@ -20,7 +20,27 @@ class ProductService {
 
         const filter = {};
 
-        if (category) filter.category = category;
+        // Handle category - can be ObjectId, ObjectId string, or slug
+        if (category) {
+            // Check if it's already an ObjectId or a valid ObjectId string
+            if (typeof category === 'object' || (typeof category === 'string' && category.match(/^[0-9a-fA-F]{24}$/))) {
+                filter.category = category;
+            } else {
+                // It's a slug, need to resolve to ObjectId
+                const categoryDoc = await Category.findOne({ slug: category });
+                if (categoryDoc) {
+                    filter.category = categoryDoc._id;
+                } else {
+                    // Category slug not found, return empty results
+                    return {
+                        products: [],
+                        total: 0,
+                        page: parseInt(page),
+                        totalPages: 0
+                    };
+                }
+            }
+        }
         if (typeof isActive !== 'undefined') filter.isActive = isActive;
         if (typeof isFeatured !== 'undefined') filter.isFeatured = isFeatured;
 
