@@ -44,9 +44,11 @@
                 });
             });
 
-            // Password strength validation
+            // Password strength validation (only for register page)
             const passwordInput = document.getElementById('password');
-            if (passwordInput) {
+            const passwordStrength = document.getElementById('passwordStrength');
+
+            if (passwordInput && passwordStrength) {
                 const updatePasswordStrength = () => {
                     const password = passwordInput.value;
                     const requirements = {
@@ -79,7 +81,7 @@
                 passwordInput.addEventListener('input', updatePasswordStrength);
                 passwordInput.addEventListener('blur', updatePasswordStrength);
 
-                // Form validation
+                // Form validation (only if password strength indicator exists)
                 const form = passwordInput.closest('form');
                 if (form) {
                     const errorAlert = document.getElementById('passwordValidationError');
