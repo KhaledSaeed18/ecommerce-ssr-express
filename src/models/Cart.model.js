@@ -47,9 +47,6 @@ cartSchema.pre('save', function () {
     this.totalPrice = this.items.reduce((sum, item) => sum + (item.price * item.quantity), 0);
 });
 
-// Index for faster user lookups
-cartSchema.index({ user: 1 });
-
 const Cart = mongoose.model('Cart', cartSchema);
 
 export default Cart;
