@@ -661,7 +661,7 @@
 .dashboard-content {
     flex: 1;
     min-width: 0;
-    padding: var(--spacing-xl);
+    padding: var(--spacing-md);
     background-color: var(--color-background);
 }
 
