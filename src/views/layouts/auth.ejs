@@ -20,8 +20,65 @@
     <script>
         document.addEventListener('DOMContentLoaded', () => {
             lucide.createIcons();
+
+            // Password visibility toggle functionality
+            document.querySelectorAll('.password-toggle').forEach(button => {
+                button.addEventListener('click', () => {
+                    const targetId = button.getAttribute('data-target');
+                    const input = document.getElementById(targetId);
+                    const eyeIcon = button.querySelector('.eye-icon');
+                    const eyeOffIcon = button.querySelector('.eye-off-icon');
+
+                    if (input.type === 'password') {
+                        input.type = 'text';
+                        eyeIcon.style.display = 'none';
+                        eyeOffIcon.style.display = 'block';
+                    } else {
+                        input.type = 'password';
+                        eyeIcon.style.display = 'block';
+                        eyeOffIcon.style.display = 'none';
+                    }
+
+                    // Recreate icons after display change
+                    lucide.createIcons();
+                });
+            });
         });
     </script>
+    <style>
+        .password-input-wrapper {
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
+
+        .password-input-wrapper .form-input {
+            padding-right: 45px;
+        }
+
+        .password-toggle {
+            position: absolute;
+            right: 12px;
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #6b7280;
+            transition: color 0.2s;
+        }
+
+        .password-toggle:hover {
+            color: #374151;
+        }
+
+        .password-toggle svg {
+            width: 20px;
+            height: 20px;
+        }
+    </style>
 </body>
 
 </html>
