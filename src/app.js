@@ -8,6 +8,8 @@ import expressLayouts from 'express-ejs-layouts';
 import mongoose from 'mongoose';
 import sessionMiddleware from './config/session.js';
 import locals from './middlewares/locals.js';
+import { createRouteHandler } from 'uploadthing/express';
+import { uploadRouter } from './config/uploadthing.js';
 
 // Import routes
 import indexRoutes from './routes/index.routes.js';
@@ -47,6 +49,8 @@ app.use(helmet({
             defaultSrc: ["'self'"],
             styleSrc: ["'self'", "'unsafe-inline'"],
             scriptSrc: ["'self'", "'unsafe-inline'"],
+            imgSrc: ["'self'", "data:", "https://utfs.io", "https://kx2ai9hy41.ufs.sh"],
+            connectSrc: ["'self'", "https://utfs.io", "https://api.uploadthing.com"],
         },
     },
 }));
@@ -70,6 +74,14 @@ app.use(sessionMiddleware);
 
 // Locals middleware (makes user available in templates)
 app.use(locals);
+
+// UploadThing API routes
+app.use(
+    '/api/uploadthing',
+    createRouteHandler({
+        router: uploadRouter
+    })
+);
 
 // Routes
 app.use('/', indexRoutes);

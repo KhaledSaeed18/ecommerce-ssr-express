@@ -1,6 +1,6 @@
 import productService from '../services/product.service.js';
 import categoryService from '../services/category.service.js';
-import { deleteFile, getFileUrl } from '../config/upload.js';
+import { uploadToUploadThing, deleteFile, deleteFiles, getFileKeyFromUrl } from '../config/upload.js';
 
 class ProductController {
     /**
@@ -80,9 +80,10 @@ class ProductController {
             // Handle uploaded images
             const images = [];
             if (req.files && req.files.length > 0) {
-                req.files.forEach(file => {
+                const uploadedFiles = await uploadToUploadThing(req.files);
+                uploadedFiles.forEach(file => {
                     images.push({
-                        url: getFileUrl(file.filename),
+                        url: file.url,
                         alt: name
                     });
                 });
@@ -108,10 +109,8 @@ class ProductController {
         } catch (error) {
             console.error('Create product error:', error);
 
-            // Clean up uploaded files on error
-            if (req.files) {
-                req.files.forEach(file => deleteFile(file.filename));
-            }
+            // No need to clean up files - UploadThing handles cleanup automatically
+            // Files are only persisted after onUploadComplete callback
 
             const categories = await categoryService.getAllCategories(true);
             res.render('admin/products/form', {
@@ -189,8 +188,9 @@ class ProductController {
             // Handle new images
             if (req.files && req.files.length > 0) {
                 const product = await productService.getProductById(req.params.id);
-                const newImages = req.files.map(file => ({
-                    url: getFileUrl(file.filename),
+                const uploadedFiles = await uploadToUploadThing(req.files);
+                const newImages = uploadedFiles.map(file => ({
+                    url: file.url,
                     alt: name
                 }));
                 updateData.images = [...product.images, ...newImages];
@@ -201,10 +201,7 @@ class ProductController {
         } catch (error) {
             console.error('Update product error:', error);
 
-            // Clean up uploaded files on error
-            if (req.files) {
-                req.files.forEach(file => deleteFile(file.filename));
-            }
+            // No need to clean up files - UploadThing handles cleanup automatically
 
             const product = await productService.getProductById(req.params.id);
             const categories = await categoryService.getAllCategories(true);
@@ -232,12 +229,10 @@ class ProductController {
                 return res.redirect('/admin/products?error=Product not found');
             }
 
-            // Delete product images
+            // Delete product images from UploadThing
             if (product.images && product.images.length > 0) {
-                product.images.forEach(image => {
-                    const filename = image.url.split('/').pop();
-                    deleteFile(filename);
-                });
+                const fileKeys = product.images.map(image => getFileKeyFromUrl(image.url));
+                await deleteFiles(fileKeys);
             }
 
             await productService.deleteProduct(req.params.id);
@@ -258,8 +253,8 @@ class ProductController {
             const imageIndex = parseInt(req.params.index);
 
             if (product && product.images[imageIndex]) {
-                const filename = product.images[imageIndex].url.split('/').pop();
-                deleteFile(filename);
+                const fileKey = getFileKeyFromUrl(product.images[imageIndex].url);
+                await deleteFile(fileKey);
                 await productService.removeImage(req.params.id, imageIndex);
             }
 

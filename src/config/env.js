@@ -8,4 +8,5 @@ export default {
     SESSION_SECRET: process.env.SESSION_SECRET,
     COOKIE_SECURE: process.env.NODE_ENV === 'production',
     COOKIE_MAX_AGE: 7 * 24 * 60 * 60 * 1000, // 7 days
+    UPLOADTHING_TOKEN: process.env.UPLOADTHING_TOKEN,
 };
