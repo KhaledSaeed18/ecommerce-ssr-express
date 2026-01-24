@@ -7,7 +7,14 @@
         </a>
     </div>
 
-    <div class="card">
+    <div class="card" style="position: relative;">
+        <!-- Share Button -->
+        <button id="shareButton"
+            style="position: absolute; top: 1rem; right: 1rem; z-index: 10; background: white; border: 1px solid #ddd; border-radius: 50%; width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; cursor: pointer; box-shadow: 0 2px 4px rgba(0,0,0,0.1); transition: all 0.2s;"
+            title="Share this product">
+            <i data-lucide="share-2" style="width: 20px; height: 20px;"></i>
+        </button>
+
         <div class="product-grid">
             <!-- Product Images -->
             <div class="product-images">
@@ -120,3 +127,85 @@
     <img id="modalImage"
         style="margin: auto; display: block; max-width: 90%; max-height: 90%; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); border-radius: 8px; cursor: zoom-in;">
 </div>
+
+<script>
+    (function () {
+        'use strict';
+
+        const shareButton = document.getElementById('shareButton');
+        console.log('Share button element:', shareButton);
+
+        if (shareButton) {
+            // Add hover effects
+            shareButton.addEventListener('mouseenter', function () {
+                this.style.background = '#f5f5f5';
+                this.style.transform = 'scale(1.05)';
+            });
+
+            shareButton.addEventListener('mouseleave', function () {
+                this.style.background = 'white';
+                this.style.transform = 'scale(1)';
+            });
+
+            // Share functionality
+            shareButton.addEventListener('click', async function (e) {
+                e.preventDefault();
+                e.stopPropagation();
+                console.log('Share button clicked!');
+
+                const url = window.location.href;
+                const title = '<%= product.name %>';
+
+                // Check if Web Share API is available
+                if (navigator.share) {
+                    console.log('Using Web Share API');
+                    try {
+                        await navigator.share({
+                            title: title,
+                            url: url
+                        });
+                        console.log('Share successful');
+                    } catch (err) {
+                        if (err.name !== 'AbortError') {
+                            console.error('Error sharing:', err);
+                        }
+                    }
+                } else {
+                    // Fallback: Copy to clipboard
+                    console.log('Using clipboard fallback');
+                    try {
+                        await navigator.clipboard.writeText(url);
+                        console.log('Link copied to clipboard');
+
+                        // Show success feedback
+                        const originalHTML = shareButton.innerHTML;
+                        shareButton.innerHTML = '<i data-lucide="check" style="width: 20px; height: 20px;"></i>';
+                        shareButton.style.background = '#10b981';
+                        shareButton.style.color = 'white';
+                        shareButton.style.borderColor = '#10b981';
+
+                        // Re-initialize lucide icons
+                        if (typeof lucide !== 'undefined') {
+                            lucide.createIcons();
+                        }
+
+                        setTimeout(function () {
+                            shareButton.innerHTML = originalHTML;
+                            shareButton.style.background = 'white';
+                            shareButton.style.color = '';
+                            shareButton.style.borderColor = '#ddd';
+                            if (typeof lucide !== 'undefined') {
+                                lucide.createIcons();
+                            }
+                        }, 2000);
+                    } catch (err) {
+                        console.error('Failed to copy:', err);
+                        alert('Failed to copy link. Error: ' + err.message);
+                    }
+                }
+            });
+        } else {
+            console.error('Share button not found!');
+        }
+    })();
+</script>
