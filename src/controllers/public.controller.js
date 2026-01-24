@@ -93,10 +93,24 @@ class PublicController {
                 });
             }
 
+            // Get related products from the same category
+            const relatedProducts = await productService.getAllProducts({
+                category: product.category._id,
+                isActive: true,
+                limit: 5,
+                sort: '-createdAt'
+            });
+
+            // Filter out the current product
+            const filteredRelated = relatedProducts.products.filter(
+                p => p._id.toString() !== product._id.toString()
+            ).slice(0, 4);
+
             res.render('public/products/detail', {
                 layout: 'layouts/main',
                 title: product.name,
                 product,
+                relatedProducts: filteredRelated,
                 csrfToken: req.csrfToken ? req.csrfToken() : undefined
             });
         } catch (error) {
