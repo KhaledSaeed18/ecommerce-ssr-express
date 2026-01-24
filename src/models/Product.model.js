@@ -27,13 +27,7 @@ const productSchema = new mongoose.Schema({
     },
     comparePrice: {
         type: Number,
-        min: [0, 'Compare price cannot be negative'],
-        validate: {
-            validator: function (value) {
-                return !value || value >= this.price;
-            },
-            message: 'Compare price must be greater than or equal to regular price'
-        }
+        min: [0, 'Compare price cannot be negative']
     },
     category: {
         type: mongoose.Schema.Types.ObjectId,
@@ -87,12 +81,11 @@ productSchema.pre('validate', function () {
 });
 
 // Create slug from name before updating
-productSchema.pre('findOneAndUpdate', function (next) {
+productSchema.pre('findOneAndUpdate', function () {
     const update = this.getUpdate();
     if (update.name) {
         update.slug = generateProductSlug(update.name);
     }
-    next();
 });
 
 // Index for faster queries

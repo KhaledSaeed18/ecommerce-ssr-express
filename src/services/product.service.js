@@ -97,6 +97,14 @@ class ProductService {
             }
         }
 
+        // Manual validation for comparePrice since validator doesn't work with findOneAndUpdate
+        if (updateData.comparePrice) {
+            const priceToCompare = updateData.price !== undefined ? updateData.price : (await Product.findById(productId)).price;
+            if (updateData.comparePrice < priceToCompare) {
+                throw new Error('Compare price must be greater than or equal to regular price');
+            }
+        }
+
         return await Product.findByIdAndUpdate(
             productId,
             updateData,
