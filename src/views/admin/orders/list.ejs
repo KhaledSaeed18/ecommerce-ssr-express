@@ -71,7 +71,7 @@
                             style="display: flex; gap: 1rem; flex-wrap: wrap; align-items: end;">
                             <div class="form-group" style="margin: 0; flex: 1; min-width: 200px;">
                                 <label class="form-label">Status</label>
-                                <select name="status" class="form-control" onchange="this.form.submit()">
+                                <select name="status" class="form-input" onchange="this.form.submit()">
                                     <option value="">All Statuses</option>
                                     <option value="pending" <%=filters.status==='pending' ? 'selected' : '' %>>Pending
                                     </option>
@@ -90,8 +90,8 @@
 
                             <div class="form-group" style="margin: 0; flex: 2; min-width: 250px;">
                                 <label class="form-label">Search Order Number</label>
-                                <input type="text" name="search" class="form-control"
-                                    placeholder="Enter order number..." value="<%= filters.search %>">
+                                <input type="text" name="search" class="form-input" placeholder="Enter order number..."
+                                    value="<%= filters.search %>">
                             </div>
 
                             <button type="submit" class="btn btn-primary">

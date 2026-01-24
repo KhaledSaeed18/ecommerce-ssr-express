@@ -93,7 +93,7 @@
                                                         <div class="form-group">
                                                             <label for="status" class="form-label required">New
                                                                 Status</label>
-                                                            <select name="status" id="status" class="form-control"
+                                                            <select name="status" id="status" class="form-input"
                                                                 required onchange="toggleCommentField()">
                                                                 <option value="">Select status...</option>
                                                                 <% availableStatuses.forEach(status=> { %>
@@ -110,7 +110,7 @@
                                                             <label for="comment" class="form-label">
                                                                 <span id="commentLabel">Comment</span>
                                                             </label>
-                                                            <textarea name="comment" id="comment" class="form-control"
+                                                            <textarea name="comment" id="comment" class="form-input"
                                                                 rows="3" placeholder="Enter comment..."></textarea>
                                                             <small class="form-text text-muted">
                                                                 <span id="commentHelp"></span>
