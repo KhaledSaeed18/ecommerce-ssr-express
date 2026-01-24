@@ -5,6 +5,7 @@ import helmet from 'helmet';
 import compression from 'compression';
 import cookieParser from 'cookie-parser';
 import expressLayouts from 'express-ejs-layouts';
+import mongoose from 'mongoose';
 import sessionMiddleware from './config/session.js';
 import locals from './middlewares/locals.js';
 
@@ -25,11 +26,14 @@ import adminOrderRoutes from './routes/adminOrder.routes.js';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
+// Get project root directory (one level up from src)
+const projectRoot = path.join(__dirname, '..');
+
 const app = express();
 
 // View engine setup
 app.set('view engine', 'ejs');
-app.set('views', path.join(__dirname, 'views'));
+app.set('views', path.join(projectRoot, 'src', 'views'));
 app.use(expressLayouts);
 app.set('layout extractScripts', true);
 app.set('layout extractStyles', true);
@@ -55,9 +59,9 @@ app.use(express.urlencoded({ extended: true }));
 // Cookie parser
 app.use(cookieParser());
 
-// Static files
-app.use(express.static(path.join(__dirname, '../public')));
-app.use('/lucide', express.static(path.join(__dirname, '../node_modules/lucide/dist/umd')));
+// Static files - serve from project root
+app.use(express.static(path.join(projectRoot, 'public')));
+app.use('/lucide', express.static(path.join(projectRoot, 'node_modules', 'lucide', 'dist', 'umd')));
 
 // Session middleware
 app.use(sessionMiddleware);
@@ -78,6 +82,17 @@ app.use('/contact', contactRoutes);
 app.use('/cart', cartRoutes);
 app.use('/', orderRoutes);
 
+// Health check endpoint
+app.get('/health', (req, res) => {
+    res.json({
+        status: 'OK',
+        timestamp: new Date().toISOString(),
+        uptime: process.uptime(),
+        environment: process.env.NODE_ENV || 'development',
+        database: mongoose.connection.readyState === 1 ? 'connected' : 'disconnected'
+    });
+});
+
 // 404 handler
 app.use((req, res) => {
     res.status(404).render('404', {
@@ -88,14 +103,14 @@ app.use((req, res) => {
 
 // Error handler
 app.use((err, req, res, next) => {
-    console.error('Error:', err);
-
     // CSRF error
     if (err.code === 'EBADCSRFTOKEN') {
         return res.status(403).send('Invalid CSRF token');
     }
 
-    res.status(500).send('Internal Server Error');
+    // Send error response
+    const isDev = process.env.NODE_ENV !== 'production';
+    res.status(500).send(isDev ? `Internal Server Error: ${err.message}` : 'Internal Server Error');
 });
 
 export default app;
