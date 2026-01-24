@@ -8,92 +8,96 @@
 
     <div class="card-content">
         <% if (contacts && contacts.length> 0) { %>
-            <table class="table">
-                <thead>
-                    <tr>
-                        <th>Status</th>
-                        <th>Full Name</th>
-                        <th>Email</th>
-                        <th>Subject</th>
-                        <th>Message</th>
-                        <th>Date</th>
-                        <th>Actions</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <% contacts.forEach(contact=> { %>
-                        <tr
-                            <%= contact.status === 'unread' ? 'style="background-color: rgba(139, 124, 91, 0.05);"' : '' %>>
-                            <td>
-                                <% if (contact.status==='unread' ) { %>
-                                    <span class="badge badge-primary" style="background-color: var(--color-olive); gap: 5px;">
-                                        <i data-lucide="mail" style="width: 14px; height: 14px;"></i>
-                                        Unread
-                                    </span>
-                                    <% } else { %>
-                                        <span class="badge badge-secondary" style="gap: 5px;">
-                                            <i data-lucide="mail-open" style="width: 14px; height: 14px;"></i>
-                                            Read
-                                        </span>
-                                        <% } %>
-                            </td>
-                            <td>
-                                <strong>
-                                    <%= contact.fullName %>
-                                </strong>
-                            </td>
-                            <td>
-                                <a href="mailto:<%= contact.email %>"
-                                    style="color: var(--color-primary); text-decoration: none;">
-                                    <%= contact.email %>
-                                </a>
-                            </td>
-                            <td>
-                                <strong>
-                                    <%= contact.subject %>
-                                </strong>
-                            </td>
-                            <td>
-                                <div style="max-width: 300px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;"
-                                    title="<%= contact.message %>">
-                                    <%= contact.message %>
-                                </div>
-                            </td>
-                            <td style="white-space: nowrap;">
-                                <%= new Date(contact.createdAt).toLocaleDateString() %>
-                                    <br>
-                                    <small class="text-muted">
-                                        <%= new Date(contact.createdAt).toLocaleTimeString() %>
-                                    </small>
-                            </td>
-                            <td>
-                                <div class="flex gap-sm" style="flex-wrap: nowrap;">
+            <div class="table-scroll-wrapper">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Status</th>
+                            <th>Full Name</th>
+                            <th>Email</th>
+                            <th>Subject</th>
+                            <th>Message</th>
+                            <th>Date</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <% contacts.forEach(contact=> { %>
+                            <tr <%=contact.status==='unread' ? 'style="background-color: rgba(139, 124, 91, 0.05);"'
+                                : '' %>>
+                                <td>
                                     <% if (contact.status==='unread' ) { %>
-                                        <form action="/admin/contacts/<%= contact._id %>/mark-read" method="POST"
-                                            style="display: inline;">
-                                            <input type="hidden" name="_csrf" value="<%= csrfToken %>">
-                                            <button type="submit" class="btn btn-sm btn-secondary" title="Mark as read">
-                                                <i data-lucide="check"></i>
-                                                Mark Read
-                                            </button>
-                                        </form>
-                                        <% } %>
-                                            <form action="/admin/contacts/<%= contact._id %>/delete" method="POST"
-                                                style="display: inline;"
-                                                onsubmit="return confirm('Are you sure you want to delete this message?');">
+                                        <span class="badge badge-primary"
+                                            style="background-color: var(--color-olive); gap: 5px;">
+                                            <i data-lucide="mail" style="width: 14px; height: 14px;"></i>
+                                            Unread
+                                        </span>
+                                        <% } else { %>
+                                            <span class="badge badge-secondary" style="gap: 5px;">
+                                                <i data-lucide="mail-open" style="width: 14px; height: 14px;"></i>
+                                                Read
+                                            </span>
+                                            <% } %>
+                                </td>
+                                <td>
+                                    <strong>
+                                        <%= contact.fullName %>
+                                    </strong>
+                                </td>
+                                <td>
+                                    <a href="mailto:<%= contact.email %>"
+                                        style="color: var(--color-primary); text-decoration: none;">
+                                        <%= contact.email %>
+                                    </a>
+                                </td>
+                                <td>
+                                    <strong>
+                                        <%= contact.subject %>
+                                    </strong>
+                                </td>
+                                <td>
+                                    <div style="max-width: 250px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;"
+                                        title="<%= contact.message %>">
+                                        <%= contact.message %>
+                                    </div>
+                                </td>
+                                <td style="white-space: nowrap;">
+                                    <%= new Date(contact.createdAt).toLocaleDateString() %>
+                                        <br>
+                                        <small class="text-muted">
+                                            <%= new Date(contact.createdAt).toLocaleTimeString() %>
+                                        </small>
+                                </td>
+                                <td>
+                                    <div class="flex gap-sm" style="flex-wrap: nowrap;">
+                                        <% if (contact.status==='unread' ) { %>
+                                            <form action="/admin/contacts/<%= contact._id %>/mark-read" method="POST"
+                                                style="display: inline;">
                                                 <input type="hidden" name="_csrf" value="<%= csrfToken %>">
-                                                <button type="submit" class="btn btn-sm btn-danger"
-                                                    title="Delete message">
-                                                    <i data-lucide="trash-2"></i>
-                                                    Delete
+                                                <button type="submit" class="btn btn-sm btn-secondary"
+                                                    title="Mark as read">
+                                                    <i data-lucide="check"></i>
+                                                    Mark Read
                                                 </button>
                                             </form>
-                                </div>
-                            </td>
-                        </tr>
-                        <% }); %>
-                </tbody>
-            </table>
+                                            <% } %>
+                                                <form action="/admin/contacts/<%= contact._id %>/delete" method="POST"
+                                                    style="display: inline;"
+                                                    onsubmit="return confirm('Are you sure you want to delete this message?');">
+                                                    <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+                                                    <button type="submit" class="btn btn-sm btn-danger"
+                                                        title="Delete message">
+                                                        <i data-lucide="trash-2"></i>
+                                                        Delete
+                                                    </button>
+                                                </form>
+                                    </div>
+                                </td>
+                            </tr>
+                            <% }); %>
+                    </tbody>
+                </table>
+            </div>
             <% } else { %>
                 <div style="text-align: center; padding: var(--spacing-3xl);">
                     <div style="display: flex; justify-content: center; margin-bottom: var(--spacing-lg);">
