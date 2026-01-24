@@ -1,54 +1,87 @@
 <!-- Hero Section -->
 <section class="hero">
+    <!-- Animated Background Elements -->
+    <div class="hero-bg-decoration">
+        <div class="floating-shape shape-1"></div>
+        <div class="floating-shape shape-2"></div>
+        <div class="floating-shape shape-3"></div>
+        <div class="floating-shape shape-4"></div>
+    </div>
+
     <div class="hero-content">
-        <h1 class="hero-title">Welcome to SSR Store</h1>
-        <p class="hero-description">Discover amazing products with authentic quality and timeless style</p>
+        <h1 class="hero-title">
+            <span class="hero-title-main">Welcome to</span>
+            <span class="hero-title-brand">SSR Store</span>
+        </h1>
+        <p class="hero-description">Discover amazing products with authentic quality and timeless style. Experience
+            shopping reimagined.</p>
         <div class="hero-actions">
             <% if (!isAuthenticated) { %>
-                <a href="/auth/register" class="btn btn-lg"
-                    style="background: transparent; border: 2px solid var(--color-cream); color: var(--color-cream);">
+                <a href="/auth/register" class="btn btn-hero btn-hero-primary">
                     <i data-lucide="user-plus"></i>
-                    Join Us
+                    <span>Join Us Today</span>
+                </a>
+                <a href="/products" class="btn btn-hero btn-hero-secondary">
+                    <i data-lucide="shopping-bag"></i>
+                    <span>Browse Products</span>
                 </a>
                 <% } else { %>
                     <% if (userRole !=='admin' ) { %>
-                        <a href="/products" class="btn btn-lg"
-                            style="background: var(--color-cream); color: var(--color-brown);">
+                        <a href="/products" class="btn btn-hero btn-hero-primary">
                             <i data-lucide="shopping-bag"></i>
-                            Shop Now
+                            <span>Shop Now</span>
                         </a>
                         <% } %>
-                            <a href="<%= userRole === 'admin' ? '/admin/dashboard' : '/dashboard' %>" class="btn btn-lg"
-                                style="background: transparent; border: 2px solid var(--color-cream); color: var(--color-cream);">
+                            <a href="<%= userRole === 'admin' ? '/admin/dashboard' : '/dashboard' %>"
+                                class="btn btn-hero btn-hero-secondary">
                                 <i data-lucide="layout-dashboard"></i>
-                                Dashboard
+                                <span>Dashboard</span>
                             </a>
                             <% } %>
         </div>
-    </div>
-    <div class="custom-shape-divider-bottom">
-        <svg data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 120" preserveAspectRatio="none">
-            <path
-                d="M985.66,92.83C906.67,72,823.78,31,743.84,14.19c-82.26-17.34-168.06-16.33-250.45.39-57.84,11.73-114,31.07-172,41.86A600.21,600.21,0,0,1,0,27.35V120H1200V95.8C1132.19,118.92,1055.71,111.31,985.66,92.83Z"
-                class="shape-fill"></path>
-        </svg>
+
+        <!-- Hero Stats -->
+        <div class="hero-stats">
+            <div class="hero-stat">
+                <div class="hero-stat-value">5000+</div>
+                <div class="hero-stat-label">Happy Customers</div>
+            </div>
+            <div class="hero-stat">
+                <div class="hero-stat-value">100%</div>
+                <div class="hero-stat-label">Quality Assured</div>
+            </div>
+            <div class="hero-stat">
+                <div class="hero-stat-value">24/7</div>
+                <div class="hero-stat-label">Support</div>
+            </div>
+        </div>
     </div>
 </section>
 
 <div class="container">
     <!-- Categories Section -->
     <section class="categories-section">
-        <h2 class="section-title">Shop by Category</h2>
+        <div class="section-header">
+            <h2 class="section-title">Shop by Category</h2>
+            <p class="section-subtitle">Explore our curated collections</p>
+        </div>
         <div class="categories-grid">
             <% if (categories && categories.length> 0) { %>
-                <% categories.forEach(category=> { %>
-                    <a href="/categories/<%= category.slug %>" class="category-card">
-                        <i data-lucide="folder" class="category-icon"></i>
-                        <div class="category-name">
-                            <%= category.name %>
+                <% categories.forEach((category, index)=> { %>
+                    <a href="/categories/<%= category.slug %>" class="category-card-modern">
+                        <div class="category-card-icon-wrapper">
+                            <i data-lucide="folder" class="category-icon-modern"></i>
                         </div>
-                        <div class="category-count">
-                            <%= category.productCount || 0 %> products
+                        <div class="category-card-content">
+                            <h3 class="category-name-modern">
+                                <%= category.name %>
+                            </h3>
+                            <p class="category-count-modern">
+                                <%= category.productCount || 0 %> products
+                            </p>
+                        </div>
+                        <div class="category-card-arrow">
+                            <i data-lucide="arrow-right"></i>
                         </div>
                     </a>
                     <% }); %>
@@ -70,44 +103,44 @@
 
     <!-- Featured Products Section -->
     <section class="featured-section">
-        <h2 class="section-title">Featured Products</h2>
-        <div class="products-grid">
+        <div class="section-header">
+            <h2 class="section-title">Featured Products</h2>
+            <p class="section-subtitle">Handpicked items just for you</p>
+        </div>
+        <div class="products-grid-modern">
             <% if (featuredProducts && featuredProducts.length> 0) { %>
-                <% featuredProducts.forEach(product=> { %>
-                    <a href="/products/<%= product.slug %>" class="card"
-                        style="text-decoration: none; color: inherit; padding: 0; overflow: hidden;">
-                        <% if (product.images && product.images.length> 0) { %>
-                            <div
-                                style="width: 100%; height: 200px; background-image: url('<%= product.images[0].url %>'); background-size: contain; background-position: center; background-repeat: no-repeat; background-color: white">
-                            </div>
-                            <% } else { %>
-                                <div
-                                    style="width: 100%; height: 200px; background: var(--color-sage); display: flex; align-items: center; justify-content: center;">
-                                    <i data-lucide="image" style="width: 64px; height: 64px; opacity: 0.3;"></i>
-                                </div>
-                                <% } %>
-                                    <div style="padding: var(--spacing-lg);">
-                                        <h3
-                                            style="margin: 0 0 var(--spacing-sm); font-size: var(--font-size-lg); font-weight: var(--font-weight-semibold);">
-                                            <%= product.name %>
-                                        </h3>
-                                        <p class="text-muted"
-                                            style="font-size: var(--font-size-sm); margin-bottom: var(--spacing-md); overflow: hidden; text-overflow: ellipsis; display: -webkit-box; -webkit-line-clamp: 2; line-clamp: 2; -webkit-box-orient: vertical;">
-                                            <%= product.description %>
-                                        </p>
-                                        <div
-                                            style="display: flex; justify-content: space-between; align-items: center;">
-                                            <span
-                                                style="font-size: var(--font-size-xl); font-weight: var(--font-weight-bold); color: var(--color-primary);">
-                                                $<%= product.price.toFixed(2) %>
-                                            </span>
-                                            <% if (product.stock> 0) { %>
-                                                <span class="badge badge-success">In Stock</span>
-                                                <% } else { %>
-                                                    <span class="badge badge-danger">Out of Stock</span>
-                                                    <% } %>
-                                        </div>
+                <% featuredProducts.forEach((product, index)=> { %>
+                    <a href="/products/<%= product.slug %>" class="product-card-modern">
+                        <div class="product-image-wrapper">
+                            <% if (product.images && product.images.length> 0) { %>
+                                <img src="<%= product.images[0].url %>" alt="<%= product.name %>"
+                                    class="product-image-modern">
+                                <% } else { %>
+                                    <div class="product-image-placeholder">
+                                        <i data-lucide="image" style="width: 64px; height: 64px; opacity: 0.3;"></i>
                                     </div>
+                                    <% } %>
+                                        <% if (product.stock> 0) { %>
+                                            <div class="product-badge badge-success-modern">In Stock</div>
+                                            <% } else { %>
+                                                <div class="product-badge badge-danger-modern">Out of Stock</div>
+                                                <% } %>
+                        </div>
+                        <div class="product-card-content">
+                            <h3 class="product-name-modern">
+                                <%= product.name %>
+                            </h3>
+                            <p class="product-description-modern">
+                                <%= product.description %>
+                            </p>
+                            <div class="product-footer-modern">
+                                <span class="product-price-modern">$<%= product.price.toFixed(2) %></span>
+                                <span class="product-view-link">
+                                    View Details
+                                    <i data-lucide="arrow-right" style="width: 16px; height: 16px;"></i>
+                                </span>
+                            </div>
+                        </div>
                     </a>
                     <% }); %>
                         <% } else { %>

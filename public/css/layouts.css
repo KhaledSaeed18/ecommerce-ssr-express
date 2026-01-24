@@ -306,7 +306,7 @@
     margin-bottom: var(--spacing-2xl);
     position: relative;
     overflow: hidden;
-    min-height: 650px;
+    min-height: calc(100dvh - 65px);
     display: flex;
     align-items: center;
     justify-content: center;
