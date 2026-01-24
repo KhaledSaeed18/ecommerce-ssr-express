@@ -1,0 +1,124 @@
+<div class="container">
+    <h1 style="margin-bottom: 2rem; font-size: 2rem;">My Orders</h1>
+
+    <% if (error) { %>
+        <div class="alert alert-error" role="alert">
+            <%= error %>
+        </div>
+        <% } %>
+
+            <% if (success) { %>
+                <div class="alert alert-success" role="alert">
+                    <%= success %>
+                </div>
+                <% } %>
+
+                    <% if (orders.length===0) { %>
+                        <div class="card text-center" style="padding: 3rem;">
+                            <i data-lucide="package"
+                                style="width: 64px; height: 64px; margin: 0 auto 1rem; opacity: 0.3;"></i>
+                            <h2 style="margin-bottom: 1rem;">No orders yet</h2>
+                            <p class="text-muted" style="margin-bottom: 2rem;">Start shopping to place your first order
+                            </p>
+                            <a href="/products" class="btn btn-primary">Browse Products</a>
+                        </div>
+                        <% } else { %>
+                            <div class="orders-list">
+                                <% orders.forEach(order=> { %>
+                                    <div class="card order-card">
+                                        <div class="order-card-header">
+                                            <div class="order-card-info">
+                                                <h3 style="margin: 0 0 0.25rem; font-size: 1.125rem;">
+                                                    Order #<%= order.orderNumber %>
+                                                </h3>
+                                                <p class="text-muted" style="margin: 0; font-size: 0.875rem;">
+                                                    Placed on <%= new Date(order.createdAt).toLocaleDateString('en-US',
+                                                        { year: 'numeric' , month: 'long' , day: 'numeric' }) %>
+                                                </p>
+                                            </div>
+                                            <div>
+                                                <span class="order-status-badge status-<%= order.status %>">
+                                                    <%= order.status.charAt(0).toUpperCase() + order.status.slice(1) %>
+                                                </span>
+                                            </div>
+                                        </div>
+
+                                        <div class="order-card-items">
+                                            <% order.items.slice(0, 3).forEach(item=> { %>
+                                                <div class="order-item-preview">
+                                                    <div class="order-item-preview-image">
+                                                        <% if (item.image) { %>
+                                                            <img src="<%= item.image %>" alt="<%= item.name %>">
+                                                            <% } else { %>
+                                                                <div
+                                                                    style="width: 100%; height: 100%; background: #e0e0e0; display: flex; align-items: center; justify-content: center;">
+                                                                    <i data-lucide="image"
+                                                                        style="width: 20px; height: 20px; opacity: 0.3;"></i>
+                                                                </div>
+                                                                <% } %>
+                                                    </div>
+                                                    <div>
+                                                        <div
+                                                            style="font-weight: 500; font-size: 0.9rem; margin-bottom: 0.25rem;">
+                                                            <%= item.name %>
+                                                        </div>
+                                                        <div class="text-muted" style="font-size: 0.85rem;">
+                                                            Qty: <%= item.quantity %> × $<%= item.price.toFixed(2) %>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <% }); %>
+                                                    <% if (order.items.length> 3) { %>
+                                                        <p class="text-muted"
+                                                            style="margin: 0.5rem 0 0; font-size: 0.875rem;">
+                                                            + <%= order.items.length - 3 %> more item<%=
+                                                                    order.items.length - 3> 1 ? 's' : '' %>
+                                                        </p>
+                                                        <% } %>
+                                        </div>
+
+                                        <div class="order-card-footer">
+                                            <div class="order-card-total">
+                                                <span class="text-muted">Total:</span>
+                                                <strong style="font-size: 1.125rem; color: var(--primary);">
+                                                    $<%= order.totalPrice.toFixed(2) %>
+                                                </strong>
+                                            </div>
+                                            <a href="/orders/<%= order._id %>" class="btn btn-secondary">
+                                                View Details
+                                                <i data-lucide="arrow-right"></i>
+                                            </a>
+                                        </div>
+                                    </div>
+                                    <% }); %>
+                            </div>
+
+                            <% if (pagination.pages> 1) { %>
+                                <nav class="pagination-nav" style="margin-top: 2rem;">
+                                    <ul class="pagination">
+                                        <% if (pagination.page> 1) { %>
+                                            <li class="page-item">
+                                                <a class="page-link"
+                                                    href="?page=<%= pagination.page - 1 %>">Previous</a>
+                                            </li>
+                                            <% } %>
+
+                                                <% for (let i=1; i <=pagination.pages; i++) { %>
+                                                    <li class="page-item <%= i === pagination.page ? 'active' : '' %>">
+                                                        <a class="page-link" href="?page=<%= i %>">
+                                                            <%= i %>
+                                                        </a>
+                                                    </li>
+                                                    <% } %>
+
+                                                        <% if (pagination.page < pagination.pages) { %>
+                                                            <li class="page-item">
+                                                                <a class="page-link"
+                                                                    href="?page=<%= pagination.page + 1 %>">Next</a>
+                                                            </li>
+                                                            <% } %>
+                                    </ul>
+                                </nav>
+                                <% } %>
+                                    <% } %>
+</div>

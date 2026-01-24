@@ -2,7 +2,7 @@
     <h1 style="margin-bottom: 2rem; font-size: 2rem;">Shopping Cart</h1>
 
     <% if (error) { %>
-        <div class="alert alert-danger" role="alert">
+        <div class="alert alert-error" role="alert">
             <%= error %>
         </div>
         <% } %>
@@ -101,10 +101,10 @@
                                                 </span></strong>
                                         </div>
 
-                                        <button class="btn btn-primary btn-lg" style="width: 100%;" disabled>
+                                        <a href="/checkout" class="btn btn-primary btn-lg" style="width: 100%;">
                                             <i data-lucide="credit-card"></i>
                                             Proceed to Checkout
-                                        </button>
+                                        </a>
 
                                         <a href="/products" class="btn btn-secondary"
                                             style="width: 100%; margin-top: 1rem;">

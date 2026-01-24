@@ -1,0 +1,180 @@
+<div class="container" style="max-width: 1000px;">
+    <div style="margin-bottom: 2rem;">
+        <a href="/orders" class="btn btn-secondary" style="margin-bottom: 1rem;">
+            <i data-lucide="arrow-left"></i>
+            Back to Orders
+        </a>
+        <h1 style="margin: 0; font-size: 2rem;">Order #<%= order.orderNumber %>
+        </h1>
+    </div>
+
+    <% if (error) { %>
+        <div class="alert alert-error" role="alert">
+            <%= error %>
+        </div>
+        <% } %>
+
+            <% if (success) { %>
+                <div class="alert alert-success" role="alert">
+                    <%= success %>
+                </div>
+                <% } %>
+
+                    <div class="order-detail-layout">
+                        <!-- Order Status and Timeline -->
+                        <div class="order-detail-main">
+                            <div class="card" style="margin-bottom: 1.5rem;">
+                                <div
+                                    style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
+                                    <h2 style="margin: 0; font-size: 1.5rem;">Order Status</h2>
+                                    <span class="order-status-badge status-<%= order.status %>"
+                                        style="font-size: 1rem; padding: 0.5rem 1rem;">
+                                        <%= order.status.charAt(0).toUpperCase() + order.status.slice(1) %>
+                                    </span>
+                                </div>
+
+                                <% if (order.status==='rejected' && order.rejectionReason) { %>
+                                    <div class="alert alert-error" role="alert">
+                                        <strong>Rejection Reason:</strong>
+                                        <%= order.rejectionReason %>
+                                    </div>
+                                    <% } %>
+
+                                        <!-- Status Timeline -->
+                                        <div class="order-timeline">
+                                            <% order.statusHistory.reverse().forEach((history, index)=> { %>
+                                                <div class="timeline-item <%= index === 0 ? 'active' : '' %>">
+                                                    <div class="timeline-marker"></div>
+                                                    <div class="timeline-content">
+                                                        <div
+                                                            style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 0.25rem;">
+                                                            <strong style="text-transform: capitalize;">
+                                                                <%= history.status %>
+                                                            </strong>
+                                                            <span class="text-muted" style="font-size: 0.875rem;">
+                                                                <%= new
+                                                                    Date(history.updatedAt).toLocaleDateString('en-US',
+                                                                    { month: 'short' , day: 'numeric' , year: 'numeric'
+                                                                    , hour: '2-digit' , minute: '2-digit' }) %>
+                                                            </span>
+                                                        </div>
+                                                        <% if (history.comment) { %>
+                                                            <p class="text-muted"
+                                                                style="margin: 0; font-size: 0.875rem;">
+                                                                <%= history.comment %>
+                                                            </p>
+                                                            <% } %>
+                                                    </div>
+                                                </div>
+                                                <% }); %>
+                                        </div>
+
+                                        <% if (order.status==='pending' ) { %>
+                                            <form action="/orders/<%= order._id %>/cancel" method="POST"
+                                                style="margin-top: 1.5rem;"
+                                                onsubmit="return confirm('Are you sure you want to cancel this order?')">
+                                                <input type="hidden" name="_csrf"
+                                                    value="<%= typeof csrfToken !== 'undefined' ? csrfToken : '' %>">
+                                                <button type="submit" class="btn btn-danger">
+                                                    <i data-lucide="x-circle"></i>
+                                                    Cancel Order
+                                                </button>
+                                            </form>
+                                            <% } %>
+                            </div>
+
+                            <!-- Order Items -->
+                            <div class="card" style="margin-bottom: 1.5rem;">
+                                <h2 style="margin-bottom: 1.5rem; font-size: 1.5rem;">Order Items</h2>
+
+                                <% order.items.forEach(item=> { %>
+                                    <div class="order-detail-item">
+                                        <div class="order-detail-item-image">
+                                            <% if (item.image) { %>
+                                                <img src="<%= item.image %>" alt="<%= item.name %>">
+                                                <% } else { %>
+                                                    <div
+                                                        style="width: 100%; height: 100%; background: #e0e0e0; display: flex; align-items: center; justify-content: center;">
+                                                        <i data-lucide="image"
+                                                            style="width: 32px; height: 32px; opacity: 0.3;"></i>
+                                                    </div>
+                                                    <% } %>
+                                        </div>
+                                        <div class="order-detail-item-info">
+                                            <h3 style="margin: 0 0 0.5rem; font-size: 1.125rem;">
+                                                <% if (item.product && item.product.slug) { %>
+                                                    <a href="/products/<%= item.product.slug %>"
+                                                        style="text-decoration: none; color: inherit;">
+                                                        <%= item.name %>
+                                                    </a>
+                                                    <% } else { %>
+                                                        <%= item.name %>
+                                                            <% } %>
+                                            </h3>
+                                            <p class="text-muted" style="margin: 0;">
+                                                $<%= item.price.toFixed(2) %> × <%= item.quantity %>
+                                            </p>
+                                        </div>
+                                        <div class="order-detail-item-total">
+                                            <strong style="font-size: 1.125rem;">
+                                                $<%= (item.price * item.quantity).toFixed(2) %>
+                                            </strong>
+                                        </div>
+                                    </div>
+                                    <% }); %>
+
+                                        <div
+                                            style="border-top: 2px solid #dee2e6; margin-top: 1.5rem; padding-top: 1rem; display: flex; justify-content: space-between; font-size: 1.25rem;">
+                                            <strong>Total:</strong>
+                                            <strong style="color: var(--primary);">$<%= order.totalPrice.toFixed(2) %>
+                                            </strong>
+                                        </div>
+                            </div>
+
+                            <% if (order.notes) { %>
+                                <div class="card">
+                                    <h3 style="margin-bottom: 1rem; font-size: 1.125rem;">Order Notes</h3>
+                                    <p style="margin: 0; white-space: pre-wrap;">
+                                        <%= order.notes %>
+                                    </p>
+                                </div>
+                                <% } %>
+                        </div>
+
+                        <!-- Order Information Sidebar -->
+                        <div class="order-detail-sidebar">
+                            <div class="card" style="margin-bottom: 1.5rem;">
+                                <h3 style="margin-bottom: 1rem; font-size: 1.125rem;">Order Information</h3>
+                                <div class="info-row">
+                                    <span class="text-muted">Order Date:</span>
+                                    <span>
+                                        <%= new Date(order.createdAt).toLocaleDateString('en-US', { year: 'numeric' ,
+                                            month: 'long' , day: 'numeric' }) %>
+                                    </span>
+                                </div>
+                                <div class="info-row">
+                                    <span class="text-muted">Payment:</span>
+                                    <span>Cash on Delivery</span>
+                                </div>
+                                <div class="info-row">
+                                    <span class="text-muted">Total Items:</span>
+                                    <span>
+                                        <%= order.totalItems %>
+                                    </span>
+                                </div>
+                            </div>
+
+                            <div class="card">
+                                <h3 style="margin-bottom: 1rem; font-size: 1.125rem;">Shipping Address</h3>
+                                <div style="line-height: 1.6;">
+                                    <strong>
+                                        <%= order.shippingAddress.fullName %>
+                                    </strong><br>
+                                    <%= order.shippingAddress.phone %><br>
+                                        <%= order.shippingAddress.address %><br>
+                                            <%= order.shippingAddress.city %>, <%= order.shippingAddress.postalCode %>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+</div>

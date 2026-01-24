@@ -1,0 +1,134 @@
+<div class="container" style="max-width: 1000px;">
+    <h1 style="margin-bottom: 2rem; font-size: 2rem;">Checkout</h1>
+
+    <% if (error) { %>
+        <div class="alert alert-error" role="alert">
+            <%= error %>
+        </div>
+        <% } %>
+
+            <div class="checkout-layout">
+                <!-- Shipping Information Form -->
+                <div class="checkout-form-section">
+                    <div class="card">
+                        <h2 style="margin-bottom: 1.5rem; font-size: 1.5rem;">Shipping Information</h2>
+
+                        <form action="/checkout" method="POST">
+                            <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+
+                            <div class="form-group">
+                                <label for="fullName" class="form-label required">Full Name</label>
+                                <input type="text" class="form-input" id="fullName" name="fullName" required>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="phone" class="form-label required">Phone Number</label>
+                                <input type="tel" class="form-input" id="phone" name="phone" required>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="address" class="form-label required">Street Address</label>
+                                <textarea class="form-textarea" id="address" name="address" rows="2"
+                                    required></textarea>
+                            </div>
+
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="city" class="form-label required">City</label>
+                                    <input type="text" class="form-input" id="city" name="city" required>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="postalCode" class="form-label required">Postal Code</label>
+                                    <input type="text" class="form-input" id="postalCode" name="postalCode" required>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="notes" class="form-label">Order Notes (Optional)</label>
+                                <textarea class="form-textarea" id="notes" name="notes" rows="3" maxlength="500"
+                                    placeholder="Any special instructions..."></textarea>
+                            </div>
+
+                            <div class="card" style="background: #f8f9fa; margin-bottom: 1.5rem;">
+                                <h3 style="margin-bottom: 1rem; font-size: 1.125rem;">Payment Method</h3>
+                                <div style="display: flex; align-items: center; gap: 0.5rem;">
+                                    <input type="radio" id="cod" name="paymentMethod" value="COD" checked disabled>
+                                    <label for="cod"
+                                        style="margin: 0; display: flex; align-items: center; gap: 0.5rem;">
+                                        <i data-lucide="wallet" style="width: 20px; height: 20px;"></i>
+                                        Cash on Delivery (COD)
+                                    </label>
+                                </div>
+                                <p class="text-muted" style="margin: 0.5rem 0 0 0; font-size: 0.875rem;">
+                                    Pay with cash when your order is delivered
+                                </p>
+                            </div>
+
+                            <button type="submit" class="btn btn-primary btn-lg" style="width: 100%;">
+                                <i data-lucide="check-circle"></i>
+                                Place Order
+                            </button>
+
+                            <a href="/cart" class="btn btn-secondary" style="width: 100%; margin-top: 1rem;">
+                                <i data-lucide="arrow-left"></i>
+                                Back to Cart
+                            </a>
+                        </form>
+                    </div>
+                </div>
+
+                <!-- Order Summary -->
+                <div class="checkout-summary-section">
+                    <div class="card">
+                        <h2 style="margin-bottom: 1.5rem; font-size: 1.5rem;">Order Summary</h2>
+
+                        <div class="order-summary-items" style="margin-bottom: 1.5rem;">
+                            <% cart.items.forEach(item=> { %>
+                                <div class="order-summary-item">
+                                    <div class="order-summary-item-image">
+                                        <% if (item.product.images && item.product.images.length> 0) { %>
+                                            <img src="<%= item.product.images[0].url %>" alt="<%= item.product.name %>">
+                                            <% } else { %>
+                                                <div
+                                                    style="width: 100%; height: 100%; background: #e0e0e0; display: flex; align-items: center; justify-content: center;">
+                                                    <i data-lucide="image"
+                                                        style="width: 20px; height: 20px; opacity: 0.3;"></i>
+                                                </div>
+                                                <% } %>
+                                    </div>
+                                    <div class="order-summary-item-info">
+                                        <div style="font-weight: 500; margin-bottom: 0.25rem;">
+                                            <%= item.product.name %>
+                                        </div>
+                                        <div class="text-muted" style="font-size: 0.875rem;">
+                                            Qty: <%= item.quantity %> × $<%= item.price.toFixed(2) %>
+                                        </div>
+                                    </div>
+                                    <div class="order-summary-item-total">
+                                        $<%= (item.price * item.quantity).toFixed(2) %>
+                                    </div>
+                                </div>
+                                <% }); %>
+                        </div>
+
+                        <div style="border-top: 1px solid #dee2e6; padding-top: 1rem; margin-bottom: 1rem;">
+                            <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
+                                <span>Subtotal (<%= cart.totalItems %> items):</span>
+                                <span>$<%= cart.totalPrice.toFixed(2) %></span>
+                            </div>
+                            <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
+                                <span>Shipping:</span>
+                                <span class="text-success">FREE</span>
+                            </div>
+                        </div>
+
+                        <div
+                            style="border-top: 2px solid #dee2e6; padding-top: 1rem; display: flex; justify-content: space-between; font-size: 1.25rem;">
+                            <strong>Total:</strong>
+                            <strong style="color: var(--primary);">$<%= cart.totalPrice.toFixed(2) %></strong>
+                        </div>
+                    </div>
+                </div>
+            </div>
+</div>

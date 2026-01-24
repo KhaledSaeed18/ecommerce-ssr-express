@@ -1,0 +1,205 @@
+<div class="container-fluid">
+    <div class="admin-header">
+        <h1>Manage Orders</h1>
+    </div>
+
+    <% if (error) { %>
+        <div class="alert alert-error" role="alert">
+            <%= error %>
+        </div>
+        <% } %>
+
+            <% if (success) { %>
+                <div class="alert alert-success" role="alert">
+                    <%= success %>
+                </div>
+                <% } %>
+
+                    <!-- Order Statistics -->
+                    <div class="stats-grid" style="margin-bottom: 2rem;">
+                        <div class="stat-card">
+                            <div class="stat-icon" style="background: #e3f2fd;">
+                                <i data-lucide="package" style="color: #1976d2;"></i>
+                            </div>
+                            <div class="stat-content">
+                                <div class="stat-label">Total Orders</div>
+                                <div class="stat-value">
+                                    <%= stats.total %>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="stat-card">
+                            <div class="stat-icon" style="background: #fff3e0;">
+                                <i data-lucide="clock" style="color: #f57c00;"></i>
+                            </div>
+                            <div class="stat-content">
+                                <div class="stat-label">Pending</div>
+                                <div class="stat-value">
+                                    <%= stats.pending %>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="stat-card">
+                            <div class="stat-icon" style="background: #e8f5e9;">
+                                <i data-lucide="truck" style="color: #388e3c;"></i>
+                            </div>
+                            <div class="stat-content">
+                                <div class="stat-label">Shipped</div>
+                                <div class="stat-value">
+                                    <%= stats.shipped %>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="stat-card">
+                            <div class="stat-icon" style="background: #f3e5f5;">
+                                <i data-lucide="dollar-sign" style="color: #7b1fa2;"></i>
+                            </div>
+                            <div class="stat-content">
+                                <div class="stat-label">Revenue</div>
+                                <div class="stat-value">$<%= stats.totalRevenue.toFixed(2) %>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Filters -->
+                    <div class="card" style="margin-bottom: 1.5rem;">
+                        <form method="GET" action="/admin/orders"
+                            style="display: flex; gap: 1rem; flex-wrap: wrap; align-items: end;">
+                            <div class="form-group" style="margin: 0; flex: 1; min-width: 200px;">
+                                <label class="form-label">Status</label>
+                                <select name="status" class="form-control" onchange="this.form.submit()">
+                                    <option value="">All Statuses</option>
+                                    <option value="pending" <%=filters.status==='pending' ? 'selected' : '' %>>Pending
+                                    </option>
+                                    <option value="approved" <%=filters.status==='approved' ? 'selected' : '' %>
+                                        >Approved</option>
+                                    <option value="shipped" <%=filters.status==='shipped' ? 'selected' : '' %>>Shipped
+                                    </option>
+                                    <option value="delivered" <%=filters.status==='delivered' ? 'selected' : '' %>
+                                        >Delivered</option>
+                                    <option value="rejected" <%=filters.status==='rejected' ? 'selected' : '' %>
+                                        >Rejected</option>
+                                    <option value="cancelled" <%=filters.status==='cancelled' ? 'selected' : '' %>
+                                        >Cancelled</option>
+                                </select>
+                            </div>
+
+                            <div class="form-group" style="margin: 0; flex: 2; min-width: 250px;">
+                                <label class="form-label">Search Order Number</label>
+                                <input type="text" name="search" class="form-control"
+                                    placeholder="Enter order number..." value="<%= filters.search %>">
+                            </div>
+
+                            <button type="submit" class="btn btn-primary">
+                                <i data-lucide="search"></i>
+                                Search
+                            </button>
+
+                            <% if (filters.status || filters.search) { %>
+                                <a href="/admin/orders" class="btn btn-secondary">
+                                    <i data-lucide="x"></i>
+                                    Clear
+                                </a>
+                                <% } %>
+                        </form>
+                    </div>
+
+                    <!-- Orders Table -->
+                    <div class="card">
+                        <% if (orders.length===0) { %>
+                            <div class="text-center" style="padding: 3rem;">
+                                <i data-lucide="package"
+                                    style="width: 64px; height: 64px; margin: 0 auto 1rem; opacity: 0.3;"></i>
+                                <h2 style="margin-bottom: 0.5rem;">No orders found</h2>
+                                <p class="text-muted">Orders will appear here once customers place them</p>
+                            </div>
+                            <% } else { %>
+                                <div class="table-responsive">
+                                    <table class="table">
+                                        <thead>
+                                            <tr>
+                                                <th>Order Number</th>
+                                                <th>Customer</th>
+                                                <th>Date</th>
+                                                <th>Items</th>
+                                                <th>Total</th>
+                                                <th>Status</th>
+                                                <th>Actions</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <% orders.forEach(order=> { %>
+                                                <tr>
+                                                    <td>
+                                                        <strong>
+                                                            <%= order.orderNumber %>
+                                                        </strong>
+                                                    </td>
+                                                    <td>
+                                                        <%= order.user.email %>
+                                                    </td>
+                                                    <td>
+                                                        <%= new Date(order.createdAt).toLocaleDateString('en-US', {
+                                                            month: 'short' , day: 'numeric' , year: 'numeric' }) %>
+                                                    </td>
+                                                    <td>
+                                                        <%= order.totalItems %>
+                                                    </td>
+                                                    <td>
+                                                        <strong>$<%= order.totalPrice.toFixed(2) %></strong>
+                                                    </td>
+                                                    <td>
+                                                        <span class="order-status-badge status-<%= order.status %>">
+                                                            <%= order.status.charAt(0).toUpperCase() +
+                                                                order.status.slice(1) %>
+                                                        </span>
+                                                    </td>
+                                                    <td>
+                                                        <a href="/admin/orders/<%= order._id %>"
+                                                            class="btn btn-sm btn-secondary">
+                                                            <i data-lucide="eye"></i>
+                                                            View
+                                                        </a>
+                                                    </td>
+                                                </tr>
+                                                <% }); %>
+                                        </tbody>
+                                    </table>
+                                </div>
+
+                                <% if (pagination.pages> 1) { %>
+                                    <nav class="pagination-nav" style="margin-top: 1rem;">
+                                        <ul class="pagination">
+                                            <% if (pagination.page> 1) { %>
+                                                <li class="page-item">
+                                                    <a class="page-link"
+                                                        href="?page=<%= pagination.page - 1 %><%= filters.status ? '&status=' + filters.status : '' %><%= filters.search ? '&search=' + filters.search : '' %>">Previous</a>
+                                                </li>
+                                                <% } %>
+
+                                                    <% for (let i=1; i <=Math.min(pagination.pages, 5); i++) { %>
+                                                        <li
+                                                            class="page-item <%= i === pagination.page ? 'active' : '' %>">
+                                                            <a class="page-link"
+                                                                href="?page=<%= i %><%= filters.status ? '&status=' + filters.status : '' %><%= filters.search ? '&search=' + filters.search : '' %>">
+                                                                <%= i %>
+                                                            </a>
+                                                        </li>
+                                                        <% } %>
+
+                                                            <% if (pagination.page < pagination.pages) { %>
+                                                                <li class="page-item">
+                                                                    <a class="page-link"
+                                                                        href="?page=<%= pagination.page + 1 %><%= filters.status ? '&status=' + filters.status : '' %><%= filters.search ? '&search=' + filters.search : '' %>">Next</a>
+                                                                </li>
+                                                                <% } %>
+                                        </ul>
+                                    </nav>
+                                    <% } %>
+                                        <% } %>
+                    </div>
+</div>

@@ -50,6 +50,13 @@
                 <h3 class="sidebar-section-title">Management</h3>
                 <ul class="sidebar-nav">
                     <li class="sidebar-nav-item">
+                        <a href="/admin/orders"
+                            class="sidebar-nav-link <%= (typeof currentPage !== 'undefined' && currentPage === 'orders') ? 'active' : '' %>">
+                            <i data-lucide="shopping-cart"></i>
+                            Orders
+                        </a>
+                    </li>
+                    <li class="sidebar-nav-item">
                         <a href="/admin/products"
                             class="sidebar-nav-link <%= (typeof currentPage !== 'undefined' && currentPage === 'products') ? 'active' : '' %>">
                             <i data-lucide="package"></i>

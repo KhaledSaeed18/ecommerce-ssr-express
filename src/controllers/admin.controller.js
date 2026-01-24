@@ -2,6 +2,7 @@ import sessionService from '../services/session.service.js';
 import productService from '../services/product.service.js';
 import categoryService from '../services/category.service.js';
 import contactService from '../services/contact.service.js';
+import orderService from '../services/order.service.js';
 
 class AdminController {
     /**
@@ -17,6 +18,7 @@ class AdminController {
             const categories = await categoryService.getAllCategories(true);
             const unreadMessages = await contactService.getUnreadCount();
             const totalContacts = await contactService.getTotalCount();
+            const orderStats = await orderService.getOrderStats();
 
             res.render('admin/dashboard', {
                 layout: 'layouts/admin',
@@ -27,6 +29,7 @@ class AdminController {
                 totalCategories: categories.length,
                 unreadMessages,
                 totalContacts,
+                orderStats,
                 csrfToken: req.csrfToken(),
             });
         } catch (error) {
