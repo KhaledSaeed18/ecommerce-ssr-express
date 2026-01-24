@@ -487,6 +487,12 @@
     opacity: 1;
 }
 
+.footer-logo {
+    width: 200px;
+    height: auto;
+    display: block;
+}
+
 /* About Page Styles */
 .about-hero {
     background: linear-gradient(135deg, var(--color-olive) 0%, var(--color-brown) 100%);
