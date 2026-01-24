@@ -480,3 +480,22 @@
 .gap-lg {
     gap: var(--spacing-lg);
 }
+
+/* Responsive Utilities */
+@media (max-width: 640px) {
+    .flex.gap-md {
+        flex-direction: column;
+    }
+
+    .flex.gap-md .btn {
+        width: 100%;
+    }
+
+    .flex.gap-sm {
+        flex-direction: column;
+    }
+
+    .flex.gap-sm .btn {
+        width: 100%;
+    }
+}
