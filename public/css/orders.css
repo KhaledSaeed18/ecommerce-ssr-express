@@ -241,17 +241,18 @@
 /* Order Timeline */
 .order-timeline {
     position: relative;
-    padding-left: 2rem;
+    padding-left: 2.5rem;
 }
 
 .order-timeline::before {
     content: '';
     position: absolute;
-    left: 0.5rem;
+    left: 10px;
     top: 0;
     bottom: 0;
-    width: 2px;
-    background: #dee2e6;
+    width: 3px;
+    background: #e0e0e0;
+    border-radius: 1.5px;
 }
 
 .timeline-item {
@@ -265,18 +266,22 @@
 
 .timeline-marker {
     position: absolute;
-    left: -1.5rem;
-    top: 0.25rem;
-    width: 12px;
-    height: 12px;
+    left: -36px;
+    top: 1.2rem;
+    width: 16px;
+    height: 16px;
     border-radius: 50%;
-    background: #dee2e6;
-    border: 2px solid white;
+    background: var(--color-olive);
+    border: 3px solid white;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    z-index: 1;
 }
 
 .timeline-item.active .timeline-marker {
-    background: var(--primary);
-    box-shadow: 0 0 0 4px rgba(var(--primary-rgb), 0.1);
+    background: var(--color-terracotta);
+    width: 16px;
+    height: 16px;
+    left: -36px;
 }
 
 .timeline-content {
