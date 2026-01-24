@@ -13,7 +13,7 @@ router.get('/checkout', csrf, orderController.showCheckout);
 router.post('/checkout', csrf, orderController.processCheckout);
 
 // Order routes
-router.get('/orders', orderController.showOrders);
+router.get('/orders', csrf, orderController.showOrders);
 router.get('/orders/:id', csrf, orderController.showOrderDetail);
 router.post('/orders/:id/cancel', csrf, orderController.cancelOrder);
 

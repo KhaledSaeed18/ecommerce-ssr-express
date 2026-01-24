@@ -90,6 +90,7 @@ class OrderController {
                 currentPage: 'orders',
                 error: null,
                 success: null,
+                csrfToken: req.csrfToken(),
                 ...result
             });
         } catch (error) {
@@ -100,6 +101,7 @@ class OrderController {
                 currentPage: 'orders',
                 error: 'Failed to load orders',
                 success: null,
+                csrfToken: req.csrfToken(),
                 orders: [],
                 pagination: { page: 1, limit: 10, total: 0, pages: 0 }
             });
