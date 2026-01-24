@@ -77,16 +77,36 @@
                         </div>
 
                         <% if (product.stock> 0) { %>
-                            <button class="btn btn-primary btn-lg" style="width: 100%;" disabled>
-                                <i data-lucide="shopping-cart"></i>
-                                Add to Cart (Coming Soon)
-                            </button>
-                            <% } else { %>
-                                <button class="btn btn-secondary btn-lg" style="width: 100%;" disabled>
-                                    <i data-lucide="x-circle"></i>
-                                    Out of Stock
-                                </button>
-                                <% } %>
+                            <% if (isAuthenticated && userRole !=='admin' ) { %>
+                                <form action="/cart/add" method="POST" class="add-to-cart-form">
+                                    <% if (typeof csrfToken !=='undefined' ) { %>
+                                        <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+                                        <% } %>
+                                            <input type="hidden" name="productId" value="<%= product._id %>">
+                                            <input type="hidden" name="quantity" value="1">
+                                            <button type="submit" class="btn btn-primary btn-lg" style="width: 100%;">
+                                                <i data-lucide="shopping-cart"></i>
+                                                Add to Cart
+                                            </button>
+                                </form>
+                                <% } else if (isAuthenticated && userRole==='admin' ) { %>
+                                    <button class="btn btn-secondary btn-lg" style="width: 100%;" disabled>
+                                        <i data-lucide="shield"></i>
+                                        Admin cannot add to cart
+                                    </button>
+                                    <% } else { %>
+                                        <a href="/auth/login" class="btn btn-primary btn-lg"
+                                            style="width: 100%; display: flex; align-items: center; justify-content: center; gap: 0.5rem; text-decoration: none;">
+                                            <i data-lucide="log-in"></i>
+                                            Login to Add to Cart
+                                        </a>
+                                        <% } %>
+                                            <% } else { %>
+                                                <button class="btn btn-secondary btn-lg" style="width: 100%;" disabled>
+                                                    <i data-lucide="x-circle"></i>
+                                                    Out of Stock
+                                                </button>
+                                                <% } %>
             </div>
         </div>
     </div>

@@ -23,6 +23,10 @@
             </button>
             <div class="navbar-nav" id="navMenu">
                 <a href="/products" class="navbar-link">Products</a>
+                <a href="/cart" class="navbar-link">
+                    <i data-lucide="shopping-cart" style="width: 18px; height: 18px;"></i>
+                    Cart
+                </a>
                 <span class="navbar-user">Welcome, <%= user.email %></span>
                 <form action="/auth/logout" method="POST" style="display: inline;">
                     <input type="hidden" name="_csrf" value="<%= csrfToken %>">
@@ -44,9 +48,15 @@
                         </a>
                     </li>
                     <li class="sidebar-nav-item">
+                        <a href="/cart" class="sidebar-nav-link <%= currentPage === 'cart' ? 'active' : '' %>">
+                            <i data-lucide="shopping-cart"></i>
+                            Shopping Cart
+                        </a>
+                    </li>
+                    <li class="sidebar-nav-item">
                         <a href="/dashboard/orders"
                             class="sidebar-nav-link <%= currentPage === 'orders' ? 'active' : '' %>">
-                            <i data-lucide="shopping-cart"></i>
+                            <i data-lucide="package"></i>
                             My Orders
                         </a>
                     </li>

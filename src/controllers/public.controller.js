@@ -97,7 +97,7 @@ class PublicController {
                 layout: 'layouts/main',
                 title: product.name,
                 product,
-                csrfToken: req.csrfToken ? req.csrfToken() : null
+                csrfToken: req.csrfToken ? req.csrfToken() : undefined
             });
         } catch (error) {
             console.error('Show product error:', error);

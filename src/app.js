@@ -17,6 +17,7 @@ import productRoutes from './routes/product.routes.js';
 import publicRoutes from './routes/public.routes.js';
 import userRoutes from './routes/user.routes.js';
 import contactRoutes from './routes/contact.routes.js';
+import cartRoutes from './routes/cart.routes.js';
 
 // ES module equivalent of __dirname
 const __filename = fileURLToPath(import.meta.url);
@@ -71,6 +72,7 @@ app.use('/admin/products', productRoutes);
 app.use('/', userRoutes);
 app.use('/', publicRoutes);
 app.use('/contact', contactRoutes);
+app.use('/cart', cartRoutes);
 
 // 404 handler
 app.use((req, res) => {
