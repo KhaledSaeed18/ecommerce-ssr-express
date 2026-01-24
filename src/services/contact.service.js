@@ -47,6 +47,13 @@ class ContactService {
     async getUnreadCount() {
         return await Contact.countDocuments({ status: 'unread' });
     }
+
+    /**
+     * Get total count
+     */
+    async getTotalCount() {
+        return await Contact.countDocuments();
+    }
 }
 
 export default new ContactService();

@@ -16,6 +16,7 @@ class AdminController {
             const productsResult = await productService.getAllProducts({ limit: 1 });
             const categories = await categoryService.getAllCategories(true);
             const unreadMessages = await contactService.getUnreadCount();
+            const totalContacts = await contactService.getTotalCount();
 
             res.render('admin/dashboard', {
                 layout: 'layouts/admin',
@@ -25,6 +26,7 @@ class AdminController {
                 totalProducts: productsResult.total,
                 totalCategories: categories.length,
                 unreadMessages,
+                totalContacts,
                 csrfToken: req.csrfToken(),
             });
         } catch (error) {
