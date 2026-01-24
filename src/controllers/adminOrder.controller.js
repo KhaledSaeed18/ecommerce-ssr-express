@@ -23,6 +23,7 @@ class AdminOrderController {
                 currentPage: 'orders',
                 error: null,
                 success: null,
+                csrfToken: req.csrfToken(),
                 ...result,
                 stats,
                 filters: { status, search }

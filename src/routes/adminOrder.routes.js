@@ -5,7 +5,7 @@ import csrf from '../middlewares/csrf.js';
 const router = express.Router();
 
 // Order management routes
-router.get('/orders', adminOrderController.showOrders);
+router.get('/orders', csrf, adminOrderController.showOrders);
 router.get('/orders/:id', csrf, adminOrderController.showOrderDetail);
 router.post('/orders/:id/status', csrf, adminOrderController.updateOrderStatus);
 
