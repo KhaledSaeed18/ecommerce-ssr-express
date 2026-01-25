@@ -4,7 +4,7 @@
 
 # SSR E-Commerce Platform
 
-A full-featured server-side rendered e-commerce web application built with Express.js and MongoDB, providing a complete online shopping experience with role-based access control, cart management, and order processing.
+A server-side rendered e-commerce web application built with Node.js, Express.js, and MongoDB. This project implements session-based authentication to manage user login and shopping sessions. Users can browse products, add items to their cart, and complete orders, while administrators can manage products, categories, and orders through a dedicated admin panel. The application uses EJS templating for dynamic page rendering and includes essential security features like CSRF protection, password hashing, and role-based access control.
 
 ## Live Demo
 
