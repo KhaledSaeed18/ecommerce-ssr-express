@@ -1,220 +1,355 @@
-# SSR E-Commerce Backend — Authentication & Setup
+<div align="center">
+  <img src="public/assets/images/logo.png" alt="SSR E-Commerce Logo" width="400"/>
+</div>
 
-A secure SSR e-commerce backend using Node.js, Express, EJS, and MongoDB with advanced session-based authentication.
+# SSR E-Commerce Platform
+
+A full-featured server-side rendered e-commerce web application built with Express.js and MongoDB, providing a complete online shopping experience with role-based access control, cart management, and order processing.
+
+## Live Demo
+
+**Deployed Application:** [https://ecommerce-ssr-express.onrender.com/](https://ecommerce-ssr-express.onrender.com/)
+
+## Table of Contents
+
+- [Features](#features)
+- [Tech Stack](#tech-stack)
+- [System Architecture](#system-architecture)
+- [Prerequisites](#prerequisites)
+- [Installation](#installation)
+- [Environment Variables](#environment-variables)
+- [Running the Application](#running-the-application)
+- [Project Structure](#project-structure)
+- [API Routes](#api-routes)
+- [Security Features](#security-features)
 
 ## Features
 
-- ✅ Session-based authentication (NO JWT, NO Passport.js)
-- ✅ MongoDB-backed sessions with connect-mongo
-- ✅ Role-based access control (user, admin)
-- ✅ Device + IP session tracking
-- ✅ CSRF protection
-- ✅ Rate limiting on login routes
-- ✅ Password hashing with bcrypt (≥12 rounds)
-- ✅ Session invalidation on password change
-- ✅ Multi-device session management
-- ✅ SSR with EJS templates
-- ✅ Security headers with Helmet
-- ✅ Compression middleware
+### User Features
+
+- **Authentication & Authorization**
+  - User registration and login with secure password hashing
+  - Session-based authentication with encrypted cookies
+  - Role-based access control (User, Admin)
+  - Account security management
+
+- **Product Catalog**
+  - Browse products with detailed information
+  - Product categories and filtering
+  - Product image galleries
+  - Responsive product listings
+
+- **Shopping Cart**
+  - Add/remove items from cart
+  - Update item quantities
+  - Persistent cart storage
+  - Clear cart functionality
+
+- **Order Management**
+  - Secure checkout process
+  - Order placement and tracking
+  - Order history with detailed view
+  - Order status updates
+
+- **Contact System**
+  - Contact form for customer inquiries
+  - Message submission with validation
+
+### Admin Features
+
+- **Dashboard**
+  - Overview of key metrics and statistics
+  - Recent orders and activities
+  
+- **Product Management**
+  - Create, edit, and delete products
+  - Upload product images via UploadThing
+  - Manage product inventory and pricing
+  
+- **Category Management**
+  - Create and manage product categories
+  - Category-based product organization
+  
+- **Order Management**
+  - View all customer orders
+  - Update order status
+  - Detailed order information
+  
+- **Contact Management**
+  - View customer messages
+  - Mark messages as read
+  - Delete messages
 
 ## Tech Stack
 
-### Core
+### Backend
 
-- Node.js
-- Express
-- EJS
-- MongoDB (Mongoose)
+- **Node.js** - JavaScript runtime environment
+- **Express.js** - Web application framework
+- **MongoDB** - NoSQL database
+- **Mongoose** - MongoDB object modeling
 
-### Auth & Sessions
+### View Engine
 
-- express-session
-- connect-mongo
-- bcrypt
+- **EJS** - Embedded JavaScript templating
+- **express-ejs-layouts** - Layout support for EJS
 
-### Security
+### Authentication & Security
 
-- helmet
-- csurf
-- express-rate-limit
-- cookie-parser
-- compression
+- **express-session** - Session middleware
+- **connect-mongo** - MongoDB session store
+- **bcrypt** - Password hashing
+- **csurf** - CSRF protection
+- **helmet** - HTTP security headers
+- **cookie-parser** - Cookie parsing middleware
+- **express-rate-limit** - Rate limiting
 
-## Project Structure
+### File Upload
 
-```bash
-src/
-  server.js              # Entry point
-  app.js                 # Express app setup
-  
-  config/
-    env.js               # Environment configuration
-    db.js                # MongoDB connection
-    session.js           # Session configuration
-  
-  models/
-    User.model.js        # User schema
-    UserSession.model.js # Session tracking schema
-  
-  routes/
-    index.routes.js      # Public routes
-    auth.routes.js       # Authentication routes
-    admin.routes.js      # Admin routes
-  
-  controllers/
-    auth.controller.js   # Auth logic
-    admin.controller.js  # Admin logic
-  
-  services/
-    auth.service.js      # Auth business logic
-    session.service.js   # Session management
-  
-  middlewares/
-    requireAuth.js       # Auth middleware
-    requireRole.js       # Role-based middleware
-    guestOnly.js         # Guest-only middleware
-    csrf.js              # CSRF protection
-    locals.js            # Template locals
-  
-  views/
-    layouts/             # EJS layouts
-    auth/                # Auth pages
-    admin/               # Admin pages
-    home.ejs             # Home page
-```
+- **UploadThing** - File upload service
+- **Multer** - Multipart form data handling
+
+### Additional Tools
+
+- **compression** - Response compression
+- **dotenv** - Environment variable management
+- **Lucide** - Icon library
+- **Nodemon** - Development auto-restart
+
+## System Architecture
+
+The application follows the MVC (Model-View-Controller) pattern:
+
+- **Models**: Data schemas and database interactions
+- **Views**: EJS templates for server-side rendering
+- **Controllers**: Business logic and request handling
+- **Services**: Reusable business logic
+- **Routes**: API endpoint definitions
+- **Middlewares**: Request processing and authentication
+- **Config**: Application configuration and setup
+
+## Prerequisites
+
+Before installing the application, ensure you have the following installed:
+
+- **Node.js**
+- **npm**
+- **MongoDB**
+- **UploadThing Account**
 
 ## Installation
 
-1. Clone the repository
-2. Install dependencies:
+1. Clone the repository:
 
-   ```bash
-   npm install
-   ```
+```bash
+git clone https://github.com/KhaledSaeed18/ecommerce-ssr-express.git
+cd ecommerce-ssr-express
+```
 
-3. Configure environment variables in `.env`:
+1. Install dependencies:
 
-   ```bash
-   DATABASE_URL=your_mongodb_connection_string
-   NODE_ENV=development
-   PORT=3000
-   SESSION_SECRET=your-super-secret-session-key
-   ```
+```bash
+npm install
+```
+
+1. Create a `.env` file in the root directory (see [Environment Variables](#environment-variables) section)
+
+2. Ensure MongoDB is running locally or you have a MongoDB Atlas connection string
+
+## Environment Variables
+
+Create a `.env` file in the root directory with the following variables:
+
+```env
+# Application
+NODE_ENV=development
+PORT=3000
+
+# Database
+DATABASE_URL=mongodb://localhost:27017/ecommerce
+# Or use MongoDB Atlas:
+# DATABASE_URL=mongodb+srv://username:password@cluster.mongodb.net/ecommerce?retryWrites=true&w=majority
+
+# Session
+SESSION_SECRET=your-secret-session-key
+
+# File Upload
+UPLOADTHING_TOKEN=your-uploadthing-token
+```
+
+### Environment Variable Details
+
+| Variable | Description | Required | Default |
+|----------|-------------|----------|---------|
+| `NODE_ENV` | Environment mode (development/production) | No | `development` |
+| `PORT` | Server port number | No | `3000` |
+| `DATABASE_URL` | MongoDB connection string | Yes | - |
+| `SESSION_SECRET` | Secret key for session encryption | Yes | - |
+| `UPLOADTHING_TOKEN` | UploadThing API token for file uploads | Yes | - |
+
+### Getting UploadThing Token
+
+1. Sign up at [uploadthing.com](https://uploadthing.com)
+2. Create a new app
+3. Copy the API token from your dashboard
+4. Add it to your `.env` file
 
 ## Running the Application
 
-### Development mode (with auto-reload)
+### Development Mode
+
+Run the application with auto-restart on file changes:
 
 ```bash
 npm run dev
 ```
 
-### Production mode
+### Production Mode
+
+Run the application in production:
 
 ```bash
 npm start
 ```
 
-The server will start on `http://localhost:3000`
+The server will start at `http://localhost:3000` (or your specified PORT).
 
-## Session Configuration
+## Project Structure
 
-- Cookie name: `sid`
-- Store: MongoDB (connect-mongo)
-- Cookie settings:
-  - httpOnly: true
-  - sameSite: "lax"
-  - secure: true (production only)
-  - maxAge: 7 days
+```bash
+ecommerce-ssr-express/
+├── src/
+│   ├── app.js                 # Express application setup
+│   ├── server.js              # Server entry point
+│   ├── config/                # Configuration files
+│   │   ├── db.js              # Database connection
+│   │   ├── env.js             # Environment variables
+│   │   ├── session.js         # Session configuration
+│   │   ├── upload.js          # Multer configuration
+│   │   └── uploadthing.js     # UploadThing configuration
+│   ├── controllers/           # Request handlers
+│   │   ├── admin.controller.js
+│   │   ├── adminOrder.controller.js
+│   │   ├── auth.controller.js
+│   │   ├── cart.controller.js
+│   │   ├── category.controller.js
+│   │   ├── contact.controller.js
+│   │   ├── order.controller.js
+│   │   ├── product.controller.js
+│   │   ├── public.controller.js
+│   │   └── user.controller.js
+│   ├── middlewares/           # Custom middleware
+│   │   ├── csrf.js            # CSRF protection
+│   │   ├── guestOnly.js       # Guest-only routes
+│   │   ├── locals.js          # Template variables
+│   │   ├── requireAuth.js     # Authentication check
+│   │   └── requireRole.js     # Role-based access
+│   ├── models/                # Database schemas
+│   │   ├── Cart.model.js
+│   │   ├── Category.model.js
+│   │   ├── Contact.model.js
+│   │   ├── Order.model.js
+│   │   ├── Product.model.js
+│   │   ├── User.model.js
+│   │   └── UserSession.model.js
+│   ├── routes/                # API routes
+│   │   ├── admin.routes.js
+│   │   ├── adminOrder.routes.js
+│   │   ├── auth.routes.js
+│   │   ├── cart.routes.js
+│   │   ├── category.routes.js
+│   │   ├── contact.routes.js
+│   │   ├── index.routes.js
+│   │   ├── order.routes.js
+│   │   ├── product.routes.js
+│   │   ├── public.routes.js
+│   │   └── user.routes.js
+│   ├── services/              # Business logic
+│   │   ├── auth.service.js
+│   │   ├── cart.service.js
+│   │   ├── category.service.js
+│   │   ├── contact.service.js
+│   │   ├── order.service.js
+│   │   ├── product.service.js
+│   │   └── session.service.js
+│   └── views/                 # EJS templates
+│       ├── layouts/           # Layout templates
+│       ├── auth/              # Authentication pages
+│       ├── admin/             # Admin pages
+│       ├── cart/              # Cart pages
+│       ├── checkout/          # Checkout pages
+│       ├── dashboard/         # User dashboard
+│       ├── orders/            # Order pages
+│       └── public/            # Public pages
+├── public/                    # Static assets
+│   ├── css/                   # Stylesheets
+│   ├── js/                    # Client-side scripts
+│   ├── assets/                # Images and media
+│   └── uploads/               # User uploads
+├── package.json               # Dependencies and scripts
+└── .env                       # Environment variables (create this)
+```
 
-## Authentication Flow
-
-### Register
-
-1. Validate input
-2. Hash password with bcrypt (12 rounds)
-3. Create user in database
-4. Redirect to login
-
-### Login
-
-1. Validate credentials
-2. Compare password with bcrypt
-3. Create express session
-4. Create UserSession record (tracks device, IP, etc.)
-5. Redirect based on role
-
-### Logout (Single Device)
-
-- Destroy express session
-- Revoke UserSession in database
-
-### Logout (All Devices)
-
-- Revoke all UserSessions for user
-- Destroy current session
-
-## Security Features
-
-1. **CSRF Protection**: All POST routes protected with CSRF tokens
-2. **Rate Limiting**: Login route limited to 5 attempts per 15 minutes
-3. **Password Security**: Bcrypt with 12+ salt rounds
-4. **Session Validation**:
-   - Checks if session exists
-   - Validates UserSession in database
-   - Verifies user is active
-   - Invalidates session if password changed
-5. **Security Headers**: Helmet middleware for HTTP security headers
-6. **HTTP-Only Cookies**: Prevents XSS attacks
-
-## Routes
+## API Routes
 
 ### Public Routes
 
 - `GET /` - Home page
+- `GET /about` - About page
+- `GET /products` - Product listing
+- `GET /products/:id` - Product details
+- `GET /contact` - Contact page
+- `POST /contact` - Submit contact form
 
-### Auth Routes
+### Authentication Routes
 
-- `GET /auth/register` - Registration page
-- `POST /auth/register` - Register new user
 - `GET /auth/login` - Login page
-- `POST /auth/login` - Login user
-- `POST /auth/logout` - Logout current device
-- `POST /auth/logout-all` - Logout all devices
+- `POST /auth/login` - Login submit
+- `GET /auth/register` - Registration page
+- `POST /auth/register` - Registration submit
+- `POST /auth/logout` - Logout
 
-### Admin Routes
+### User Routes (Authenticated)
 
-- `GET /admin/dashboard` - Admin dashboard (requires admin role)
+- `GET /dashboard` - User dashboard
+- `GET /orders` - Order history
+- `GET /orders/:id` - Order details
+- `GET /account/security` - Security settings
+- `POST /account/change-password` - Change password
 
-## Data Models
+### Cart Routes (Authenticated)
 
-### User Model
+- `GET /cart` - View cart
+- `POST /cart/add` - Add to cart
+- `POST /cart/update` - Update quantity
+- `POST /cart/remove` - Remove item
+- `POST /cart/clear` - Clear cart
 
-```javascript
-{
-  email: String (unique)
-  passwordHash: String
-  role: 'user' | 'admin'
-  status: 'active' | 'disabled'
-  passwordChangedAt: Date
-  createdAt: Date
-  updatedAt: Date
-}
-```
+### Checkout Routes (Authenticated)
 
-### UserSession Model
+- `GET /checkout` - Checkout page
+- `POST /checkout` - Place order
 
-```javascript
-{
-  userId: ObjectId
-  sessionId: String (unique)
-  ip: String
-  userAgent: String
-  device: { browser, os }
-  location: { country, city }
-  createdAt: Date
-  lastSeenAt: Date
-  revokedAt: Date
-  isRevoked: Boolean
-}
-```
+### Admin Routes (Admin Only)
+
+- `GET /admin/dashboard` - Admin dashboard
+- `GET /admin/products` - Manage products
+- `GET /admin/products/new` - Create product
+- `POST /admin/products` - Save product
+- `GET /admin/products/:id/edit` - Edit product
+- `POST /admin/products/:id` - Update product
+- `POST /admin/products/:id/delete` - Delete product
+- `GET /admin/categories` - Manage categories
+- `GET /admin/orders` - Manage orders
+- `GET /admin/contacts` - View messages
+
+## Security Features
+
+- **Password Security**: Bcrypt hashing with salt rounds
+- **Session Management**: Secure, encrypted session cookies
+- **CSRF Protection**: Token-based CSRF prevention
+- **HTTP Security**: Helmet.js for security headers
+- **Rate Limiting**: Prevent brute-force attacks
+- **Input Validation**: Server-side validation and sanitization
+- **Role-Based Access**: Protected admin routes
+- **Secure Cookies**: HTTPOnly and Secure flags in production
